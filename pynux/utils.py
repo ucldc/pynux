@@ -44,7 +44,7 @@ class Nuxeo:
 
     #
     ######## utility functions for nuxeo
-    #
+    # REST API
 
     def nxql(self, query):
         """page through the results for an nxql query"""
@@ -64,11 +64,10 @@ class Nuxeo:
     def children(self, path):
         """get child documents of a path"""
         url = self.conf["api"] + "/path/" + path + "/@children"
-        params = {'pageSize': '10000'}
-        res = requests.get(url, params=params, auth=(self.auth))
-        res.raise_for_status()
-        result_dict = json.loads(res.text)
-        return result_dict['entries']
+        params = {}
+        documents = []
+        self._recursive_get(url, params, documents, 1)
+        return documents
 
     def get_uid(self, path):
         """look up uid from the path"""
@@ -122,6 +121,24 @@ class Nuxeo:
         res = requests.get(url, params=params, auth=self.auth)
         res.raise_for_status()
         return res.text
+
+    def import_one_folder(self,
+                          leaf_type, input_path, target_path, folderish_type):
+        """trigger an import and wait for it to finish"""
+        if not leaf_type and input_path and target_path and folderish_type:
+            raise TypeError("missing required value")
+        params = {
+            "leafType": leaf_type,
+            "inputPath": input_path,
+            "targetPath": target_path,
+            "folderishType": folderish_type,
+        }
+        print self.call_file_importer_api(self.conf['fileImporter'],
+                                          self.auth, "run", params)
+        # an import should now be running, only one import can run at a time
+        # poll the api to and wait for the run to finish...
+        self.wait_file_importer()
+        return
 
     def wait_file_importer(self):
         url = "{0}/{1}".format(self.conf['fileImporter'], "status")
