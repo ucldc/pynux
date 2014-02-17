@@ -104,7 +104,7 @@ class Nuxeo:
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = os.path.join(self.conf['api'], "id", uid)
-        headers = {'X-NXDocumentProperties': 'dublincore',
+        headers = {'X-NXDocumentProperties': 'ucldc_schema,dublincore',
                    'Content-Type': 'application/json+nxentity'}
         # copy what we want from the input json into the payload
         payload = {}
