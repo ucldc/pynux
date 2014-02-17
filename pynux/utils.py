@@ -49,27 +49,11 @@ class Nuxeo:
     def nxql(self, query):
         """page through the results for an nxql query"""
         url = self.conf["api"] + "/path/@search"
-
-        def get_recursive(documents, current_page_index):
-            params = {
-                'pageSize': '100',
-                'query': query,
-                'currentPageIndex': current_page_index
-            }
-            res = requests.get(url, params=params, auth=self.auth)
-            res.raise_for_status()
-            result_dict = json.loads(res.text)
-            out_list = result_dict['entries']
-            documents.extend(out_list)
-            if result_dict['isNextPageAvailable']:
-                self.get_recursive(documents, current_page_index + 1)
-            return
         params = {
             'pageSize': '100',
             'query': query
         }
         documents = []
-        #get_recursive(documents, 1)
         self._recursive_get(url, params, documents, 1)
         return documents
 
