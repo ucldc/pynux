@@ -3,7 +3,7 @@
 
 """
 pynux.utils
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 python function library for working with nuxeo "REST" APIs.
 
@@ -14,6 +14,7 @@ import requests
 import json
 import urlparse
 import sys
+import os
 from time import sleep
 
 
@@ -33,7 +34,6 @@ class Nuxeo:
     def _recursive_get(self, url, params, documents, current_page_index):
         params.update({'currentPageIndex': current_page_index})
         res = requests.get(url, params=params, auth=self.auth)
-        pp(res.url)
         res.raise_for_status()
         result_dict = json.loads(res.text)
         out_list = result_dict['entries']
@@ -44,11 +44,13 @@ class Nuxeo:
 
     #
     ######## utility functions for nuxeo
+
     # REST API
 
     def nxql(self, query):
         """page through the results for an nxql query"""
         url = self.conf["api"] + "/path/@search"
+        url = os.path.join(self.conf["api"] , "path/@search")
         params = {
             'pageSize': '100',
             'query': query
@@ -62,16 +64,18 @@ class Nuxeo:
         return self.nxql('SELECT * FROM Document')
 
     def children(self, path):
+        path = path.strip("/")
         """get child documents of a path"""
-        url = self.conf["api"] + "/path/" + path + "/@children"
+        url = os.path.join(self.conf["api"],  "path", path,  "@children")
         params = {}
         documents = []
         self._recursive_get(url, params, documents, 1)
         return documents
 
     def get_uid(self, path):
+        path = path.strip("/")
         """look up uid from the path"""
-        url = urlparse.urljoin(self.conf['api'] + "/", "path") + path
+        url = os.path.join(self.conf['api'],  "path", path)
         res = requests.get(url, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)['uid']
@@ -82,10 +86,9 @@ class Nuxeo:
             raise TypeError("either uid or path")
         url = ""
         if 'path' in documentid:
-            url = self.conf['api'] + "/path" + documentid['path'] + "/"
+            url = os.path.join(self.conf['api'], "path", documentid['path'].strip("/"))
         elif 'uid' in documentid:
-            url = self.conf['api'] + "/id/" + documentid['uid'] + "/"
-            pp(url)
+            url = os.path.join(self.conf['api'], "id", documentid['uid'])
         else:
             raise Exception("no document id found")
         headers = {'X-NXDocumentProperties': 'ucldc_schema,dublincore'}
@@ -114,11 +117,13 @@ class Nuxeo:
         res.raise_for_status()
         return json.loads(res.text)
 
+    # platform importer api
+
     def call_file_importer_api(self, verb, params):
         """generic wrapper to make GET calls to this API"""
         url = "{0}/{1}".format(self.conf['fileImporter'], verb)
-        pp((url, params))
         res = requests.get(url, params=params, auth=self.auth)
+        pp(dir(res.request))
         res.raise_for_status()
         return res.text
 
@@ -133,8 +138,7 @@ class Nuxeo:
             "targetPath": target_path,
             "folderishType": folderish_type,
         }
-        print self.call_file_importer_api(self.conf['fileImporter'],
-                                          self.auth, "run", params)
+        print self.call_file_importer_api("run", params)
         # an import should now be running, only one import can run at a time
         # poll the api to and wait for the run to finish...
         self.wait_file_importer()

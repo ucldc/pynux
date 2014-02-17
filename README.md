@@ -3,10 +3,19 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
-```pyhton
->>> import pynux
->>> nx = pynux.utils.Nuxeo(None)
->>> nx.nxql('SELECT * FROM Document')
+```python
+from pynux import utils
+nx = utils.Nuxeo()
+
+nx.nxql('SELECT * form Documents');
+nx.all()
+nx.children("asset-library")
+nx.get_uid("asset-library")
+nx.get_metadata(uid="xxxxx-xxxxx-xxxxx-xxxxx")
+nx.get_metadata(path="/asset-library")
+
+
+
 ```
 TODO: more examples
 
