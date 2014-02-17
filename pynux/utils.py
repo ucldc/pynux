@@ -21,10 +21,11 @@ class Nuxeo:
     def __init__(self, conf={}):
         # http://stackoverflow.com/a/17501381/1763984
         defaults = {
-            "user": "Administrator",
-            "password": "Administrator",
-            "api": "http://localhost:8080/nuxeo/site/api/v1",
-            "fileImporter": "http://localhost:8080/nuxeo/site/fileImporter"}
+            "user":         os.environ.get('NUXEO_API_USER',         "Administrator"),
+            "password":     os.environ.get('NUXEO_API_PASS',         "Administrator"),
+            "api":          os.environ.get('NUXEO_REST_API',         "http://localhost:8080/nuxeo/site/api/v1"),
+            "fileImporter": os.environ.get('NUXEO_FILEIMPORTER_API', "http://localhost:8080/nuxeo/site/fileImporter"),
+        }
         self.conf = {}
         self.conf.update(defaults)
         self.conf.update(conf)

@@ -10,12 +10,9 @@ nx = utils.Nuxeo()
 nx.nxql('SELECT * form Documents');
 nx.all()
 nx.children("asset-library")
-nx.get_uid("asset-library")
-nx.get_metadata(uid="xxxxx-xxxxx-xxxxx-xxxxx")
-nx.get_metadata(path="/asset-library")
-
-
-
+uid = nx.get_uid("asset-library")
+nx.get_metadata(uid=uid)
+nx.get_metadata(path="asset-library")
 ```
 TODO: more examples
 
