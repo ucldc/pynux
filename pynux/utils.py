@@ -12,7 +12,6 @@ python function library for working with nuxeo "REST" APIs.
 from pprint import pprint as pp
 import requests
 import json
-import urlparse
 import sys
 import os
 from time import sleep
@@ -50,7 +49,7 @@ class Nuxeo:
     def nxql(self, query):
         """page through the results for an nxql query"""
         url = self.conf["api"] + "/path/@search"
-        url = os.path.join(self.conf["api"] , "path/@search")
+        url = os.path.join(self.conf["api"], "path/@search")
         params = {
             'pageSize': '100',
             'query': query
@@ -96,20 +95,22 @@ class Nuxeo:
         res.raise_for_status()
         return json.loads(res.text)
 
-    def update_nuxeo_properties(self, properties, **documentid):
+    def update_nuxeo_properties(self, data, **documentid):
         """update nuxeo document properties"""
+        uid = ''
         if len(documentid) != 1:
             raise TypeError("either uid or path")
-        uid = documentid['uid'] or self.get_uid(documentid['path'])
-        if not uid:
-            raise Exception("no uid found")
-        url = self.api + "/id/" + uid + "/"
-        headers = {'X-NXDocumentProperties': 'ucldc_schema,dublincore',
+        if 'path' in documentid:
+            uid = self.get_uid(documentid['path'])
+        elif 'uid' in documentid:
+            uid = documentid['uid']
+        url = os.path.join(self.conf['api'], "id", uid)
+        headers = {'X-NXDocumentProperties': 'dublincore',
                    'Content-Type': 'application/json+nxentity'}
         # copy what we want from the input json into the payload
         payload = {}
         payload['uid'] = uid
-        payload['properties'] = properties
+        payload['properties'] = data['properties']
         res = requests.put(url,
                            data=json.dumps(payload),
                            auth=self.auth,
@@ -123,7 +124,6 @@ class Nuxeo:
         """generic wrapper to make GET calls to this API"""
         url = "{0}/{1}".format(self.conf['fileImporter'], verb)
         res = requests.get(url, params=params, auth=self.auth)
-        pp(dir(res.request))
         res.raise_for_status()
         return res.text
 
