@@ -4,7 +4,9 @@ pynux
 python function library for working with nuxeo "REST" APIs.
 
 ```pyhton
->>> from pynux import pynux
+>>> import pynux
+>>> nx = pynux.utils.Nuxeo(None)
+>>> nx.nxql('SELECT * FROM Document')
 ```
 TODO: more examples
 
