@@ -48,7 +48,6 @@ class Nuxeo:
 
     def nxql(self, query):
         """page through the results for an nxql query"""
-        url = self.conf["api"] + "/path/@search"
         url = os.path.join(self.conf["api"], "path/@search")
         params = {
             'pageSize': '100',
