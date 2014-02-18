@@ -9,7 +9,6 @@ python function library for working with nuxeo "REST" APIs.
 
 """
 
-from pprint import pprint as pp
 import requests
 import json
 import sys
@@ -74,10 +73,8 @@ class Nuxeo:
 
     def children(self, path):
         """get child documents of a path"""
-        url = os.path.join(self.conf["api"],
-                           "path",
-                           path.strip("/"),
-                           "@children")
+        url = os.path.join(self.conf["api"], "path",
+                           path.strip("/"), "@children")
         params = {}
         documents = []
         self._recursive_get(url, params, documents, 1)
@@ -85,20 +82,19 @@ class Nuxeo:
 
     def get_uid(self, path):
         """look up uid from the path"""
-        path = path.strip("/")
-        url = os.path.join(self.conf['api'],  "path", path)
+        url = os.path.join(self.conf['api'],  "path",
+                           path.strip("/"))
         res = requests.get(url, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)['uid']
 
     def get_metadata(self, **documentid):
-        """get metadata for a path"""
+        """get metadata for a `uid` or `path` parameter"""
         if len(documentid) != 1:
             raise TypeError("either uid or path")
         url = ""
         if 'path' in documentid:
-            url = os.path.join(self.conf['api'],
-                               "path",
+            url = os.path.join(self.conf['api'], "path",
                                documentid['path'].strip("/"))
         elif 'uid' in documentid:
             url = os.path.join(self.conf['api'], "id", documentid['uid'])
@@ -110,7 +106,7 @@ class Nuxeo:
         return json.loads(res.text)
 
     def update_nuxeo_properties(self, data, **documentid):
-        """update nuxeo document properties"""
+        """update nuxeo document properties, `uid=` or `path=` parameter"""
         uid = ''
         if len(documentid) != 1:
             raise TypeError("either uid or path")
