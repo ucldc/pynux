@@ -15,7 +15,6 @@ import sys
 import os
 from time import sleep
 
-
 class Nuxeo:
     def __init__(self, conf={}):
         """configuration for http connections"""
@@ -50,6 +49,26 @@ class Nuxeo:
         if result_dict['isNextPageAvailable']:
             self._recursive_get(url, params, documents, current_page_index + 1)
         return
+
+    def _mkdir(self, newdir):
+        """works the way a good mkdir should :)
+            - already exists, silently complete
+            - regular file in the way, raise an exception
+            - parent directory(ies) does not exist, make them as well
+        """
+        # http://code.activestate.com/recipes/82465-a-friendly-mkdir/
+        if os.path.isdir(newdir):
+            pass
+        elif os.path.isfile(newdir):
+            raise OSError("a file with the same name as the desired " \
+                          "dir, '%s', already exists." % newdir)
+        else:
+            head, tail = os.path.split(newdir)
+            if head and not os.path.isdir(head):
+                _mkdir(head)
+            #print "_mkdir %s" % repr(newdir)
+            if tail:
+                os.mkdir(newdir)
 
     #
     ######## utility functions for nuxeo
@@ -128,6 +147,32 @@ class Nuxeo:
                            headers=headers)
         res.raise_for_status()
         return json.loads(res.text)
+
+
+    def print_document_summary(self, documents):
+        for document in documents:
+            print "{0}\t{1}".format(document['uid'], document['path'])
+
+
+    def copy_metadata_to_local(self, documents, local):
+        for document in documents:
+            path = document['path']
+            file = os.path.join(local, path.strip("/"))
+            dir = os.path.dirname(file)
+            self._mkdir(dir)
+            # http://stackoverflow.com/a/18043472/1763984 
+            with open(local + path, 'w') as json_file:
+                py_json = self.get_metadata(path=path);
+                out_json = {}
+                out_json['uid']=py_json['uid']
+                out_json['path']=py_json['path']
+                out_json["entity-type"]=py_json["entity-type"]
+                out_json['properties']=py_json['properties']
+                json_file.write(json.dumps(out_json,
+                                           sort_keys=True,
+                                           indent=4, 
+                                           separators=(',', ': ')))
+
 
     # platform importer api
 
