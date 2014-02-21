@@ -7,7 +7,7 @@ python function library for working with nuxeo "REST" APIs.
 from pynux import utils
 nx = utils.Nuxeo()
 
-nx.nxql('SELECT * form Documents');
+nx.nxql('SELECT * from Documents');
 nx.all()
 nx.children("asset-library")
 uid = nx.get_uid("asset-library")
