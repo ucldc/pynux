@@ -65,7 +65,7 @@ class Nuxeo:
         else:
             head, tail = os.path.split(newdir)
             if head and not os.path.isdir(head):
-                _mkdir(head)
+                self._mkdir(head)
             #print "_mkdir %s" % repr(newdir)
             if tail:
                 os.mkdir(newdir)
@@ -157,11 +157,11 @@ class Nuxeo:
     def copy_metadata_to_local(self, documents, local):
         for document in documents:
             path = document['path']
-            file = os.path.join(local, path.strip("/"))
+            path = path.strip("/")
+            file = os.path.join(local, ''.join([path.strip("/"), ".json"]))
             dir = os.path.dirname(file)
             self._mkdir(dir)
-            # http://stackoverflow.com/a/18043472/1763984 
-            with open(local + path, 'w') as json_file:
+            with open(file, 'w') as json_file: 
                 py_json = self.get_metadata(path=path);
                 out_json = {}
                 out_json['uid']=py_json['uid']
