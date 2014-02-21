@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+"""update nuxeo"""
+import sys
+import argparse
+import requests
+import json
+import urlparse
+from pynux import utils
+from pprint import pprint as pp
+
+
+def main(argv=None):
+    """main"""
+    parser = argparse.ArgumentParser(
+        description='nuxeo metadata via REST API, one record'
+    )
+    parser.add_argument('file', nargs=1, help="application/json+nxentity")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--uid', help="update specific nuxeo uid")
+    group.add_argument('--path', help="update specific nuxeo path")
+
+    if argv is None:
+        argv = parser.parse_args()
+
+    # todo; add these defaults as parameters as well as env
+    nx = utils.Nuxeo()
+    pp(argv.file[0])
+    jfile = argv.file[0]
+    uid = argv.uid
+    path = argv.path
+    json_data = open(jfile)
+    data = json.load(json_data)
+    ret = {}
+    if uid:				# use uid supplied at command line
+        ret = nx.update_nuxeo_properties(data, uid=uid)
+    elif path:				# use path supplied at command line
+        ret = nx.update_nuxeo_properties(data, path=path)
+    # if no uid nor path was specified on the command line, then
+    # prefer "path": to "uid": when importing files because the file may have
+    # come from another machine where the uuids are different
+    else:
+        uid = nx.get_uid(data.get('path')) or data.get('uid')
+        ret = nx.update_nuxeo_properties(data, uid=uid)
+    if not ret:
+        print "no uid found, specify --uid or --path"
+        exit(1)
+    pp(ret)
+
+
+# main() idiom for importing into REPL for debugging
+if __name__ == "__main__":
+    sys.exit(main())
