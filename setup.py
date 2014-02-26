@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 setup(
     name='pynux',
@@ -9,7 +10,7 @@ setup(
             'nxql = pynux.nxql:main',
             'nxup1 = pynux.nxup1:main',
             'nxls = pynux.nxls:main',
-            'nxql-all = pynux.nxsl-all:main',
+            'nxql_all = pynux.nxsl_all:main',
             'pilog = pynux.pilog:main',
         ]
     }
