@@ -4,6 +4,15 @@ setup(
     version = "0.0.0",
     packages = find_packages(),
     install_requires = ['requests'],
+    entry_points={
+        'console_scripts': [
+            'nxql = pynux.nxql:main',
+            'nxup1 = pynux.nxup1:main',
+            'nxls = pynux.nxls:main',
+            'nxql-all = pynux.nxsl-all:main',
+            'pilog = pynux.pilog:main',
+        ]
+    }
 )
 
 """
