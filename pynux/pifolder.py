@@ -17,12 +17,12 @@ def main(argv=None):
     if argv is None:
         argv = parser.parse_args()
     nx = utils.Nuxeo()
-    nx.import_log_activate()
-    nx.import_one_folder(argv.leaf_type,
+    print nx.import_log_activate()
+    print nx.import_one_folder(argv.leaf_type,
                          argv.input_path,
                          argv.target_path,
                          argv.folderish_type)
-    nx.call_file_importer_api('status')
+    print nx.call_file_importer_api('status')
     print nx.import_log()
 
 
