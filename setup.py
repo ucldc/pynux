@@ -12,7 +12,7 @@ setup(
             'nxls = pynux.nxls:main',
             'nxql_all = pynux.nxsl_all:main',
             'pilog = pynux.pilog:main',
-            'pistatus = pynux.status:main',
+            'pistatus = pynux.pistatus:main',
             'pifolder = pynux.pifolder:main',
         ]
     }
