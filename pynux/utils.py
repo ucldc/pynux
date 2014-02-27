@@ -217,7 +217,7 @@ class Nuxeo:
             sleep(20)
             sys.stdout.write('.')
             sys.stdout.flush()
-            self.wait_file_importer()
+            self.import_status_wait()
 
 
 def test():
