@@ -5,16 +5,22 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
-## REST API
+## Requirements
 
- * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/NXDOC/REST+API) [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-rest-api)
- * [api viewer](http://doc.nuxeo.com/display/public/NXDOC/Resources+Endpoints)
+### REST API
+
+ * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/NXDOC/REST+API) 
+ * [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-rest-api)
  * `nuxeoctl mp-install nuxeo-rest-api`
+ * [api viewer](http://doc.nuxeo.com/display/public/NXDOC/Resources+Endpoints)
 
-## Bulk document importer a.k.a. Nuxeo platform importer
+### Bulk document importer
 
- * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/ADMINDOC/Bulk+Document+Importer) [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer)
+ * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/ADMINDOC/Bulk+Document+Importer) 
+ * [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer)
  * `nuxeoctl mp-install nuxeo-platform-importer`
+
+## Example
 
 ```python
 from pynux import utils
@@ -27,7 +33,7 @@ uid = nx.get_uid("asset-library")
 nx.get_metadata(uid=uid)
 nx.get_metadata(path="asset-library")
 ```
-TODO: more examples
+TODO: more examples, better tests
 
 # License 
 
