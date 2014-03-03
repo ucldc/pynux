@@ -14,6 +14,7 @@ import json
 import sys
 import os
 from time import sleep
+import itertools
 
 
 class Nuxeo:
@@ -39,18 +40,21 @@ class Nuxeo:
         self.conf.update(conf)
         self.auth = (self.conf["user"], self.conf["password"])
 
-    def _recursive_get(self, url, params, documents, current_page_index):
-        """keep paging results from nuxeo until we are done"""
+    def _get_page(self, url, params, current_page_index):
+        """get a single page of nuxeo API results"""
         params.update({'currentPageIndex': current_page_index})
         res = requests.get(url, params=params, auth=self.auth)
         res.raise_for_status()
-        result_dict = json.loads(res.text)
-        out_list = result_dict['entries']
-        documents.extend(out_list)
-        if result_dict['isNextPageAvailable']:
-            self._recursive_get(url, params, documents, current_page_index + 1)
-        return
+        return json.loads(res.text)
 
+    def _get_iter(self, url, params):
+        """generator iterator for nuxeo results"""
+        for current_page_index in itertools.count():
+            result_dict = self._get_page(url, params, current_page_index)
+            for document in result_dict['entries']:
+                yield document
+            if not result_dict['isNextPageAvailable']:
+                break
 
     #
     ######## utility functions for nuxeo
@@ -64,9 +68,7 @@ class Nuxeo:
             'pageSize': '100',
             'query': query
         }
-        documents = []
-        self._recursive_get(url, params, documents, 1)
-        return documents
+        return self._get_iter(url, params)
 
     def all(self):
         """.nxql("SELECT * FROM Document")"""
@@ -77,9 +79,7 @@ class Nuxeo:
         url = os.path.join(self.conf["api"], "path",
                            path.strip("/"), "@children")
         params = {}
-        documents = []
-        self._recursive_get(url, params, documents, 1)
-        return documents
+        return self._get_iter(url, params)
 
     def get_uid(self, path):
         """look up uid from the path"""
