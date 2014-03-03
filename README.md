@@ -1,6 +1,8 @@
 pynux
 =====
 
+[![Build Status](https://travis-ci.org/ucldc/pynux.png?branch=master)](https://travis-ci.org/ucldc/pynux)
+
 python function library for working with nuxeo "REST" APIs.
 
 ```python
