@@ -13,7 +13,7 @@ import requests
 import json
 import sys
 import os
-from time import sleep
+import time
 import itertools
 
 
@@ -171,7 +171,7 @@ class Nuxeo:
         print self.call_file_importer_api("logActivate")
 
     def import_one_folder(self,
-                          leaf_type, input_path, target_path, folderish_type):
+                          leaf_type, input_path, target_path, folderish_type, wait=True):
         """trigger an import and wait for it to finish"""
         if not leaf_type and input_path and target_path and folderish_type:
             raise TypeError("missing required value")
@@ -181,21 +181,25 @@ class Nuxeo:
             "targetPath": target_path,
             "folderishType": folderish_type,
         }
+        # only one import can run at a time
+        self.import_status_wait(wait=wait)
         print self.call_file_importer_api("run", params)
-        # an import should now be running, only one import can run at a time
-        # poll the api to and wait for the run to finish...
-        self.import_status_wait()
+        # an import should now be running
+        self.import_status_wait(wait=wait)
         return
 
-    def import_status_wait(self):
+    def import_status_wait(self, wait=True, sleep=20):
         """check import status and wait for Not Running"""
+        if not wait:     # for the impatient
+            return True
+        # poll the api to and wait for the run to finish...
         url = "{0}/{1}".format(self.conf['fileImporter'], "status")
         res = requests.get(url, auth=self.auth)
         res.raise_for_status()
         if res.text == 'Not Running':
             return True
         else:
-            sleep(20)
+            time.sleep(sleep)
             sys.stdout.write('.')
             sys.stdout.flush()
             self.import_status_wait()
