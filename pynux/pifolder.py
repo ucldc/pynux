@@ -9,11 +9,19 @@ from pynux import utils
 def main(argv=None):
 
     parser = argparse.ArgumentParser(
-        description='nuxeo platform importer log/logActivate')
-    parser.add_argument('--leaf_type', required=True)
-    parser.add_argument('--input_path', required=True)
-    parser.add_argument('--target_path', required=True)
-    parser.add_argument('--folderish_type', required=True)
+        description='run import of a folder into nuxeo')
+    parser.add_argument('--leaf_type', 
+        help="nuxeo document type for imported leaf nodes", 
+        required=True)
+    parser.add_argument('--input_path',
+        help="unix path to files",
+        required=True)
+    parser.add_argument('--target_path', 
+        help="target document for import in nuxeo",
+        required=True)
+    parser.add_argument('--folderish_type',
+        help="nuxeo document type for imported folder",
+        required=True)
     if argv is None:
         argv = parser.parse_args()
     nx = utils.Nuxeo()
