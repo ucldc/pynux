@@ -18,6 +18,12 @@ import itertools
 
 
 class Nuxeo:
+    #
+    ######## utility functions for nuxeo
+
+    #  Object's data keeps track of URLs and credentials
+    #  for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
+    #
     def __init__(self, conf={}):
         """configuration for http connections"""
         # http://stackoverflow.com/a/17501381/1763984
@@ -40,6 +46,10 @@ class Nuxeo:
         self.conf.update(conf)
         self.auth = (self.conf["user"], self.conf["password"])
 
+    ## Python generator for paged API resource
+    #    based on http://stackoverflow.com/questions/17702785/
+    #    see also [Loop like a native](http://www.youtube.com/watch?v=EnSu9hHGq5o)
+
     def _get_page(self, url, params, current_page_index):
         """get a single page of nuxeo API results"""
         params.update({'currentPageIndex': current_page_index})
@@ -56,10 +66,8 @@ class Nuxeo:
             if not result_dict['isNextPageAvailable']:
                 break
 
-    #
-    ######## utility functions for nuxeo
-
-    # REST API
+    # REST API functions
+    # uses NUXEO_REST_API in self.conf['api']
 
     def nxql(self, query):
         """generice nxql query"""
@@ -153,7 +161,8 @@ class Nuxeo:
                                            indent=4,
                                            separators=(',', ': ')))
 
-    # platform importer api
+    # platform importer api functions
+    # uses NUXEO_FILEIMPORTER_API in self.conf['fileImporter']
 
     def call_file_importer_api(self, verb, params={}):
         """generic wrapper to make GET calls to this API"""
@@ -171,7 +180,8 @@ class Nuxeo:
         print self.call_file_importer_api("logActivate")
 
     def import_one_folder(self,
-                          leaf_type, input_path, target_path, folderish_type, wait=True):
+                          leaf_type, input_path, target_path, folderish_type,
+                          wait=True, sleep=20):
         """trigger an import and wait for it to finish"""
         if not leaf_type and input_path and target_path and folderish_type:
             raise TypeError("missing required value")
@@ -182,10 +192,10 @@ class Nuxeo:
             "folderishType": folderish_type,
         }
         # only one import can run at a time
-        self.import_status_wait(wait=wait)
+        self.import_status_wait(wait=wait, sleep=sleep)
         print self.call_file_importer_api("run", params)
         # an import should now be running
-        self.import_status_wait(wait=wait)
+        self.import_status_wait(wait=wait, sleep=sleep)
         return
 
     def import_status_wait(self, wait=True, sleep=20):
@@ -199,14 +209,14 @@ class Nuxeo:
         if res.text == 'Not Running':
             return True
         else:
-            time.sleep(sleep)
             sys.stdout.write('.')
             sys.stdout.flush()
+            time.sleep(sleep)
             self.import_status_wait()
 
-    #
     ## utility functions
-    #
+    #  generic snippts not customzied to this project
+
     def _mkdir(self, newdir):
         """works the way a good mkdir should :)
             - already exists, silently complete

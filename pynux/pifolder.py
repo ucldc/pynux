@@ -39,7 +39,8 @@ def main(argv=None):
         argv.input_path,
         argv.target_path,
         argv.folderish_type,
-        wait=argv.no_wait)
+        wait=argv.no_wait,
+        sleep=argv.sleep)
     print nx.call_file_importer_api('status')
     print nx.import_log()
 
