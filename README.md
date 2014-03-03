@@ -5,6 +5,17 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
+## REST API
+
+ * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/NXDOC/REST+API) [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-rest-api)
+ * [api viewer](http://doc.nuxeo.com/display/public/NXDOC/Resources+Endpoints)
+ * `nuxeoctl mp-install nuxeo-rest-api`
+
+## Bulk document importer a.k.a. Nuxeo platform importer
+
+ * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/ADMINDOC/Bulk+Document+Importer) [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer)
+ * `nuxeoctl mp-install nuxeo-platform-importer`
+
 ```python
 from pynux import utils
 nx = utils.Nuxeo()
