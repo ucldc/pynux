@@ -15,7 +15,7 @@ import sys
 import os
 import time
 import itertools
-
+import logging
 
 class Nuxeo:
     #
@@ -27,6 +27,7 @@ class Nuxeo:
     def __init__(self, conf={}):
         """configuration for http connections"""
         # http://stackoverflow.com/a/17501381/1763984
+        self.logger = logging.getLogger(__name__)
         defaults = {
             "user":
             os.environ.get('NUXEO_API_USER',
@@ -45,6 +46,7 @@ class Nuxeo:
         self.conf.update(defaults)
         self.conf.update(conf)
         self.auth = (self.conf["user"], self.conf["password"])
+        self.logger.info("Nuxeo object init")
 
     ## Python generator for paged API resource
     #    based on http://stackoverflow.com/questions/17702785/
@@ -55,6 +57,7 @@ class Nuxeo:
         params.update({'currentPageIndex': current_page_index})
         res = requests.get(url, params=params, auth=self.auth)
         res.raise_for_status()
+        self.logger.debug(res.text)
         return json.loads(res.text)
 
     def _get_iter(self, url, params):
@@ -76,6 +79,8 @@ class Nuxeo:
             'pageSize': '100',
             'query': query
         }
+        self.logger.info(query)
+        self.logger.debug(url)
         return self._get_iter(url, params)
 
     def all(self):
@@ -87,6 +92,8 @@ class Nuxeo:
         url = os.path.join(self.conf["api"], "path",
                            path.strip("/"), "@children")
         params = {}
+        self.logger.info(path)
+        self.logger.debug(url)
         return self._get_iter(url, params)
 
     def get_uid(self, path):
