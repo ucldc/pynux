@@ -30,6 +30,7 @@ def main(argv=None):
     parser.add_argument('--poll_interval',
         help="seconds to sleep for if waiting",
         dest="sleep",
+        default=20,
         type=int)
     if argv is None:
         argv = parser.parse_args()
