@@ -3,10 +3,7 @@ from pynux import utils
 import json
 import sys
 
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 @all_requests
 def response_content(url, request):
