@@ -6,7 +6,7 @@ setup(
     packages = find_packages(),
     install_requires = ['requests'],
     test_suite = 'pynux.tests.test_utils',
-    tests_require = ['httmock'],
+    tests_require = ['httpretty'],
     entry_points={
         'console_scripts': [
             'nxql = pynux.nxql:main',
