@@ -20,8 +20,12 @@ def response_content(url, request):
             'content': json.dumps(content) }
 
 class TestNuxeoFunctions(unittest.TestCase):
-    def test_this(self):
+    def runTest(self):
         with HTTMock(response_content):
             nx = utils.Nuxeo()
             assert(nx.all())
             assert(nx.all().next())
+
+if __name__ == "__main__":
+    test_case = TestNuxeoFunctions()
+    test_case.runTest()
