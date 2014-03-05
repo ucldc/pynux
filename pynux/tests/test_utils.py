@@ -24,15 +24,16 @@ class TestNuxeoREST(unittest.TestCase):
             'entries': [ document ],
             'isNextPageAvailable': False
         }
+        def request_callback(request, uri, headers):
+            if '@' in uri:
+                return (200, headers, json.dumps(results))
+            else:
+                return (200, headers, json.dumps(document))
+
         httpretty.register_uri(
             httpretty.GET,
-            re.compile("(\w+)/@\w+"),
-            body=json.dumps(results),
-        )
-        httpretty.register_uri(
-            httpretty.GET,
-            re.compile("^((?!\@).)*$"),  # http://stackoverflow.com/a/406408/1763984
-            body=json.dumps(document),
+            re.compile("(\w+)"),
+            body=request_callback,
         )
         assert(self.nx.all())
         assert(self.nx.all().next())
