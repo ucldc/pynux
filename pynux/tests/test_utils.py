@@ -15,16 +15,24 @@ class TestNuxeoREST(unittest.TestCase):
 
     @httpretty.activate
     def runTest(self):
-        content = {
-            'entries': [{
-                'properties': [],
-            }],
+        document = {
+            'properties': [],
+            'uid': 'xxxx'
+        }
+        results = {
+            'entries': [ document ],
             'isNextPageAvailable': False
         }
+        def request_callback(request, uri, headers):
+            if '@' in uri:
+                return (200, headers, json.dumps(results))
+            else:
+                return (200, headers, json.dumps(document))
+
         httpretty.register_uri(
             httpretty.GET,
-            re.compile('mockme'),
-            body=json.dumps(content),
+            re.compile("(\w+)"),
+            body=request_callback,
         )
         assert(self.nx.all())
         assert(self.nx.all().next())
