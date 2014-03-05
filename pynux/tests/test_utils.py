@@ -8,7 +8,10 @@ import unittest
 
 class TestNuxeoREST(unittest.TestCase):
     def setUp(self):
-        self.nx = utils.Nuxeo()
+        self.nx = utils.Nuxeo({
+            'api': 'http://mockme/r',
+            "fileImporter": 'http://mockme/f'
+        })
 
     @httpretty.activate
     def runTest(self):
@@ -20,7 +23,7 @@ class TestNuxeoREST(unittest.TestCase):
         }
         httpretty.register_uri(
             httpretty.GET,
-            re.compile("localhost"),
+            re.compile('mockme'),
             body=json.dumps(content),
         )
         assert(self.nx.all())
