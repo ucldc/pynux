@@ -20,7 +20,7 @@ class TestNuxeoREST(unittest.TestCase):
         }
         httpretty.register_uri(
             httpretty.GET,
-            re.compile("(\w+)"),
+            re.compile("localhost"),
             body=json.dumps(content),
         )
         assert(self.nx.all())
