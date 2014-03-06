@@ -11,10 +11,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description='nuxeo platform importer log/logActivate')
     parser.add_argument('--activate', action='store_true')
+    utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
 
     if argv.activate:
         nx.import_log_activate()

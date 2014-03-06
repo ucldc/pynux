@@ -8,12 +8,13 @@ from pynux import utils
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
+    utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
     # http://demo.nuxeo.com/nuxeo/api/v1/path/default-domain/@search\?query\=SELECT%20\*%20FROM%20Document\&pageSize\=2\&currentPageIndex\=1 | jq .
     # todo; add these defaults as parameters as well as env
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     documents = nx.all()
     nx.print_document_summary(documents)
 

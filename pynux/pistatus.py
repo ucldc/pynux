@@ -10,10 +10,11 @@ def main(argv=None):
 
     parser = argparse.ArgumentParser(
         description='nuxeo platform importer status')
+    utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     print nx.call_file_importer_api('status')
 
 # main() idiom for importing into REPL for debugging

@@ -10,6 +10,7 @@ def main(argv=None):
 
     parser = argparse.ArgumentParser(
         description='run import of a folder into nuxeo')
+    utils.get_common_options(parser)
     required_flags = parser.add_argument_group('there are four required arguments')
     required_flags.add_argument('--leaf_type', 
         help="nuxeo document type for imported leaf nodes", 
@@ -34,7 +35,7 @@ def main(argv=None):
         type=int)
     if argv is None:
         argv = parser.parse_args()
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     print nx.import_log_activate()
     print nx.import_one_folder(argv.leaf_type,
         argv.input_path,

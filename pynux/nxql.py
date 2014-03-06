@@ -12,10 +12,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='nxql via REST API')
     parser.add_argument('nxql', nargs=1, help="nxql query")
     parser.add_argument('--outdir')
+    utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
 
     documents = nx.nxql(argv.nxql[0])
 

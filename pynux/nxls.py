@@ -13,18 +13,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
     parser.add_argument('path', nargs=1, help="nuxeo document path")
     parser.add_argument('--outdir')
-    parser.add_argument('--loglevel', default='ERROR')
-    parser.add_argument('--rcfile', default=".pynuxrc")
+    utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
-    # set debugging level
-    numeric_level = getattr(logging, argv.loglevel.upper(), None)
-    if not isinstance(numeric_level, int):
-        raise ValueError('Invalid log level: %s' % argv.loglevel)
-    logging.basicConfig(level=numeric_level, )
-
-    nx = utils.Nuxeo(rcfile=argv.rcfile)
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     documents = nx.children(argv.path[0])
 
     if argv.outdir:

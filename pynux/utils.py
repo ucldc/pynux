@@ -19,7 +19,11 @@ import logging
 import ConfigParser
 from os.path import expanduser
 import io
+import argparse
 
+_loglevel_ = 'ERROR'
+_rcfile_ = '.pynuxrc'
+_version_ = '0.0.0'
 
 class Nuxeo:
     """
@@ -28,9 +32,10 @@ class Nuxeo:
     Object's data keeps track of URLs and credentials
     for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
     """
-    def __init__(self, conf={}, rcfile=u'.pynuxrc'):
+    def __init__(self, conf={}, rcfile=_rcfile_, loglevel=_loglevel_):
         """configuration for http connections"""
         self.logger = logging.getLogger(__name__)
+        self.logger.info("Nuxeo object init")
         defaultrc = """\
 [nuxeo_account]
 user = Administrator
@@ -59,7 +64,13 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         self.conf.update(defaults)
         self.conf.update(conf)
         self.auth = (self.conf["user"], self.conf["password"])
-        self.logger.info("Nuxeo object init")
+
+        # set debugging level
+        numeric_level = getattr(logging, loglevel, None)
+        if not isinstance(numeric_level, int):
+            raise ValueError('Invalid log level: %s' % argv.loglevel)
+        logging.basicConfig(level=numeric_level, )
+
 
     ## Python generator for paged API resource
     #    based on http://stackoverflow.com/questions/17702785/
@@ -256,6 +267,24 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             #print "_mkdir %s" % repr(newdir)
             if tail:
                 os.mkdir(newdir)
+
+## Module level function
+
+def get_common_options(argparse_parser):
+    """ common options for command line programs that use the library
+
+        :param: an argparse parser
+        :returns: argparse parser parameter group
+    """
+    common_options = argparse_parser.add_argument_group(
+        'common options for pynux commands')
+    common_options.add_argument('--loglevel',
+        default= _loglevel_,
+        help=''.join(["CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is ",_loglevel_]))
+    common_options.add_argument('--rcfile',
+        default= _rcfile_,
+        help="path to ConfigParser compatible ini file")
+    return common_options
 
 def test():
     """ Testing Docstring"""

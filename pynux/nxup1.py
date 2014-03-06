@@ -17,12 +17,12 @@ def main(argv=None):
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--uid', help="update specific nuxeo uid")
     group.add_argument('--path', help="update specific nuxeo path")
-
+    utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
     # todo; add these defaults as parameters as well as env
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     pp(argv.file[0])
     jfile = argv.file[0]
     uid = argv.uid
