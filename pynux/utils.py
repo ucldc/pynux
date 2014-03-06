@@ -16,6 +16,10 @@ import os
 import time
 import itertools
 import logging
+import ConfigParser
+from os.path import expanduser
+import io
+
 
 class Nuxeo:
     #
@@ -26,21 +30,31 @@ class Nuxeo:
     #
     def __init__(self, conf={}):
         """configuration for http connections"""
-        # http://stackoverflow.com/a/17501381/1763984
         self.logger = logging.getLogger(__name__)
+        defaultrc = """\
+[nuxeo_account]
+user = Administrator
+password = Administrator
+
+[rest_api]
+base = http://localhost:8080/nuxeo/site/api/v1
+
+[platform_importer]
+base = http://localhost:8080/nuxeo/site/fileImporter
+"""
+        config_file = u'.pynuxrc'
+        config_files = [
+            os.path.join(expanduser("~"),config_file),
+            config_file
+        ]
+        config = ConfigParser.SafeConfigParser()
+        config.readfp(io.BytesIO(defaultrc))
+        config.read(config_files)
         defaults = {
-            "user":
-            os.environ.get('NUXEO_API_USER',
-                           "Administrator"),
-            "password":
-            os.environ.get('NUXEO_API_PASS',
-                           "Administrator"),
-            "api":
-            os.environ.get('NUXEO_REST_API',
-                           "http://localhost:8080/nuxeo/site/api/v1"),
-            "fileImporter":
-            os.environ.get('NUXEO_FILEIMPORTER_API',
-                           "http://localhost:8080/nuxeo/site/fileImporter")
+            "user":         config.get('nuxeo_account', 'user'),
+            "password":     config.get('nuxeo_account', 'password'),
+            "api":          config.get('rest_api', 'base'),
+            "fileImporter": config.get('platform_importer', 'base')
         }
         self.conf = {}
         self.conf.update(defaults)

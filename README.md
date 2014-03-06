@@ -49,11 +49,28 @@ pistatus [-h]
 pilog [-h] [--activate]
 ```
 
-TODO: more examples, better tests, autodoc from source
+### config
+
+The following is the default configuration:
+
+```ini
+[nuxeo_account]
+user = Administrator
+password = Administrator
+
+[rest_api]
+base = http://localhost:8080/nuxeo/site/api/v1
+
+[platform_importer]
+base = http://localhost:8080/nuxeo/site/fileImporter
+```
+
+Defaults can be overridden by setting then in `~/.pynuxrc` or `./.pynuyxrc`.  Please `chmod 600 .pynuxrc`.
 
 # License 
 
 Copyright © 2014, Regents of the University of California
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 
