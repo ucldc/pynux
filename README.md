@@ -65,7 +65,9 @@ base = http://localhost:8080/nuxeo/site/api/v1
 base = http://localhost:8080/nuxeo/site/fileImporter
 ```
 
-Defaults can be overridden by setting then in `~/.pynuxrc` or `./.pynuyxrc`.  Please `chmod 600 .pynuxrc`.
+Defaults can be overridden by setting them in `~/.pynuxrc` or `./.pynuyxrc`.  
+
+It may be advisable to `chmod 600 .pynuxrc`.
 
 # License 
 
