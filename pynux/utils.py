@@ -22,13 +22,13 @@ import io
 
 
 class Nuxeo:
-    #
-    ######## utility functions for nuxeo
+    """
+    utility functions for nuxeo
 
-    #  Object's data keeps track of URLs and credentials
-    #  for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
-    #
-    def __init__(self, conf={}):
+    Object's data keeps track of URLs and credentials
+    for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
+    """
+    def __init__(self, conf={}, rcfile=u'.pynuxrc'):
         """configuration for http connections"""
         self.logger = logging.getLogger(__name__)
         defaultrc = """\
@@ -42,10 +42,9 @@ base = http://localhost:8080/nuxeo/site/api/v1
 [platform_importer]
 base = http://localhost:8080/nuxeo/site/fileImporter
 """
-        config_file = u'.pynuxrc'
         config_files = [
-            os.path.join(expanduser("~"),config_file),
-            config_file
+            os.path.join(expanduser("~"),'.pynuxrc'),
+            rcfile
         ]
         config = ConfigParser.SafeConfigParser()
         config.readfp(io.BytesIO(defaultrc))

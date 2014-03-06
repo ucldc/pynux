@@ -14,6 +14,7 @@ def main(argv=None):
     parser.add_argument('path', nargs=1, help="nuxeo document path")
     parser.add_argument('--outdir')
     parser.add_argument('--loglevel', default='ERROR')
+    parser.add_argument('--rcfile', default=".pynuxrc")
     if argv is None:
         argv = parser.parse_args()
 
@@ -23,7 +24,7 @@ def main(argv=None):
         raise ValueError('Invalid log level: %s' % argv.loglevel)
     logging.basicConfig(level=numeric_level, )
 
-    nx = utils.Nuxeo()
+    nx = utils.Nuxeo(rcfile=argv.rcfile)
     documents = nx.children(argv.path[0])
 
     if argv.outdir:
