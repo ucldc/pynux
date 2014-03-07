@@ -12,7 +12,8 @@ def main(argv=None):
 
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
     parser.add_argument('path', nargs=1, help="nuxeo document path")
-    parser.add_argument('--outdir')
+    parser.add_argument('--outdir', 
+        help="directory to hold application/json+nxentity .json files")
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()

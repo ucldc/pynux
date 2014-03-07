@@ -22,7 +22,7 @@ python setup.py install
 python setup.py test
 ```
 
-## [Command documentation and API Documentation](http://ucldc.github.io/pynux/)
+## [Command and API Documentation](http://ucldc.github.io/pynux/)
 
 ## Requirements
 
