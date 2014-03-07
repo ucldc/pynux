@@ -8,15 +8,44 @@ Welcome to pynux's documentation!
 
 Contents:
 
-.. toctree::
-   :maxdepth: 2
 
+Rest API Commands
+-----------------
 
+nxls
+~~~~
+.. program-output:: nxls -h
 
-Indices and tables
-==================
+nxql
+~~~~
+.. program-output:: nxql -h
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+nxql_all
+~~~~~~~~
+.. program-output:: nxql_all -h
 
+Platform (bulk) importer commands
+---------------------------------
+
+pilog
+~~~~~
+.. program-output:: pilog -h
+
+pistatus
+~~~~~~~~
+.. program-output:: pistatus -h
+
+pifolder
+~~~~~~~~
+.. program-output:: pifolder -h
+
+Library
+-------
+
+.. automodule:: pynux.utils
+
+.. autoclass:: pynux.utils.Nuxeo
+   :members:
+   :private-members:
+
+.. autofunction:: pynux.utils.get_common_options
