@@ -5,7 +5,7 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
-[Command and Library Documentation](http://ucldc.github.io/pynux/)
+## [Command documentation and API Documentation](http://ucldc.github.io/pynux/)
 
 ## Requirements
 
@@ -36,19 +36,6 @@ nx.children("asset-library")
 uid = nx.get_uid("asset-library")
 nx.get_metadata(uid=uid)
 nx.get_metadata(path="asset-library")
-```
-
-### Commands
-
-```
-nxls [-h] [--outdir OUTDIR] path
-nxql [-h] [--outdir OUTDIR] nxql
-nxup1 [-h] [--uid UID | --path PATH] file
-pifolder [-h] --leaf_type LEAF_TYPE --input_path INPUT_PATH
-         --target_path TARGET_PATH --folderish_type FOLDERISH_TYPE
-         [--no_wait] [--poll_interval SLEEP]
-pistatus [-h]
-pilog [-h] [--activate]
 ```
 
 ### config
