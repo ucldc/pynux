@@ -216,20 +216,64 @@ there are four required arguments:
 </div>
 <dl class="class">
 <dt id="pynux.utils.Nuxeo">
-<em class="property">class </em><tt class="descclassname">pynux.utils.</tt><tt class="descname">Nuxeo</tt><big>(</big><em>conf={}</em>, <em>rcfile='.pynuxrc'</em>, <em>loglevel='ERROR'</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">pynux.utils.</tt><tt class="descname">Nuxeo</tt><big>(</big><em>conf={}</em>, <em>rcfile='.pynux.utilsrc'</em>, <em>loglevel='ERROR'</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo" title="Permalink to this definition">¶</a></dt>
 <dd><p>utility functions for nuxeo</p>
 <p>Object&#8217;s data keeps track of URLs and credentials
 for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>conf</strong> &#8211; dictionary with user:, password:, api: and/or fileImporter: to override defaults</li>
+<li><strong>rcfile</strong> &#8211; <cite>ConfigParser</cite></li>
+<li><strong>loglevel</strong> &#8211; for standard library <cite>logging</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="pynux.utils.Nuxeo._get_iter">
 <tt class="descname">_get_iter</tt><big>(</big><em>url</em>, <em>params</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo._get_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>generator iterator for nuxeo results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> &#8211; url before query string</li>
+<li><strong>params</strong> (<em>dict of cgi paramaters</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">iterator of nuxeo API results</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pynux.utils.Nuxeo._get_page">
 <tt class="descname">_get_page</tt><big>(</big><em>url</em>, <em>params</em>, <em>current_page_index</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo._get_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>get a single page of nuxeo API results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> &#8211; url before query string</li>
+<li><strong>params</strong> (<em>dict of cgi paramaters</em>) &#8211; </li>
+<li><strong>current_page_index</strong> (<em>int</em>) &#8211; current page (index 0)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">json from nuxeo</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -245,6 +289,14 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <dt id="pynux.utils.Nuxeo.all">
 <tt class="descname">all</tt><big>(</big><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.all" title="Permalink to this definition">¶</a></dt>
 <dd><p>.nxql(&#8220;SELECT * FROM Document&#8221;)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">iterator of nuxeo API results</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -257,18 +309,48 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <dt id="pynux.utils.Nuxeo.children">
 <tt class="descname">children</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.children" title="Permalink to this definition">¶</a></dt>
 <dd><p>get child documents of a path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">iterator of nuxeo API results</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pynux.utils.Nuxeo.get_metadata">
 <tt class="descname">get_metadata</tt><big>(</big><em>**documentid</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.get_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>get metadata for a <cite>uid</cite> or <cite>path</cite> parameter</p>
+<dd><p>get metadata for a document</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>documentid</strong> &#8211; either uid= or path=</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">json from nuxeo</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pynux.utils.Nuxeo.get_uid">
 <tt class="descname">get_uid</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.get_uid" title="Permalink to this definition">¶</a></dt>
 <dd><p>look up uid from the path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) &#8211; nuxeo path for a document</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">uid</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -287,6 +369,25 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <dt id="pynux.utils.Nuxeo.import_one_folder">
 <tt class="descname">import_one_folder</tt><big>(</big><em>leaf_type</em>, <em>input_path</em>, <em>target_path</em>, <em>folderish_type</em>, <em>wait=True</em>, <em>sleep=20</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.import_one_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>trigger an import and wait for it to finish</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>leaf_type</strong> &#8211; nuxeo document type for imported files</li>
+<li><strong>input_path</strong> &#8211; path on local file system</li>
+<li><strong>target_path</strong> &#8211; parent path in Nuxeo</li>
+<li><strong>folderish_type</strong> &#8211; nuxeo document type of new folder</li>
+<li><strong>wait</strong> &#8211; boolean (True to poll)</li>
+<li><strong>sleep</strong> &#8211; float (how long to sleep during poll)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">STDOUT</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -298,13 +399,36 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <dl class="method">
 <dt id="pynux.utils.Nuxeo.nxql">
 <tt class="descname">nxql</tt><big>(</big><em>query</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.nxql" title="Permalink to this definition">¶</a></dt>
-<dd><p>generice nxql query</p>
+<dd><p>generic nxql query</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">iterator of nuxeo API results</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pynux.utils.Nuxeo.update_nuxeo_properties">
 <tt class="descname">update_nuxeo_properties</tt><big>(</big><em>data</em>, <em>**documentid</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.update_nuxeo_properties" title="Permalink to this definition">¶</a></dt>
-<dd><p>update nuxeo document properties, <cite>uid=</cite> or <cite>path=</cite> parameter</p>
+<dd><p>update nuxeo document properties</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>dict</em>) &#8211; document properties for nuxeo update</li>
+<li><strong>documentid</strong> &#8211; either uid= or path=</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">updated json from nuxeo</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -317,7 +441,7 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">an argparse parser</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argvarse_parser</strong> &#8211; an argparse parser</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">argparse parser parameter group</td>
 </tr>
