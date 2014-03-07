@@ -1,1 +1,369 @@
-docs/index.html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynux documentation &mdash; pynux 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pynux 0.0.0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">pynux 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pynux-documentation">
+<h1>pynux documentation<a class="headerlink" href="#pynux-documentation" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/ucldc/pynux">code on github</a></p>
+<p><a class="reference external" href="https://github.com/ucldc/pynux/blob/master/README.md">README and LICENSE</a></p>
+<div class="section" id="rest-api-commands">
+<h2>Rest API Commands<a class="headerlink" href="#rest-api-commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="nxls">
+<h3>nxls<a class="headerlink" href="#nxls" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: nxls [-h] [--outdir OUTDIR] [--loglevel LOGLEVEL] [--rcfile RCFILE]
+            path
+
+nuxeo metadata via REST API
+
+positional arguments:
+  path                 nuxeo document path
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --outdir OUTDIR
+
+common options for pynux commands:
+  --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                       ERROR
+  --rcfile RCFILE      path to ConfigParser compatible ini file
+</pre></div>
+</div>
+</div>
+<div class="section" id="nxql">
+<h3>nxql<a class="headerlink" href="#nxql" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: nxql [-h] [--outdir OUTDIR] [--loglevel LOGLEVEL] [--rcfile RCFILE]
+            nxql
+
+nxql via REST API
+
+positional arguments:
+  nxql                 nxql query
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --outdir OUTDIR
+
+common options for pynux commands:
+  --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                       ERROR
+  --rcfile RCFILE      path to ConfigParser compatible ini file
+</pre></div>
+</div>
+</div>
+<div class="section" id="nxql-all">
+<h3>nxql_all<a class="headerlink" href="#nxql-all" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: nxql_all [-h] [--loglevel LOGLEVEL] [--rcfile RCFILE]
+
+nuxeo metadata via REST API
+
+optional arguments:
+  -h, --help           show this help message and exit
+
+common options for pynux commands:
+  --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                       ERROR
+  --rcfile RCFILE      path to ConfigParser compatible ini file
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="platform-bulk-importer-commands">
+<h2>Platform (bulk) importer commands<a class="headerlink" href="#platform-bulk-importer-commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pilog">
+<h3>pilog<a class="headerlink" href="#pilog" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: pilog [-h] [--activate] [--loglevel LOGLEVEL] [--rcfile RCFILE]
+
+nuxeo platform importer log/logActivate
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --activate
+
+common options for pynux commands:
+  --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                       ERROR
+  --rcfile RCFILE      path to ConfigParser compatible ini file
+</pre></div>
+</div>
+</div>
+<div class="section" id="pistatus">
+<h3>pistatus<a class="headerlink" href="#pistatus" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: pistatus [-h] [--loglevel LOGLEVEL] [--rcfile RCFILE]
+
+nuxeo platform importer status
+
+optional arguments:
+  -h, --help           show this help message and exit
+
+common options for pynux commands:
+  --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                       ERROR
+  --rcfile RCFILE      path to ConfigParser compatible ini file
+</pre></div>
+</div>
+</div>
+<div class="section" id="pifolder">
+<h3>pifolder<a class="headerlink" href="#pifolder" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: pifolder [-h] [--loglevel LOGLEVEL] [--rcfile RCFILE] --leaf_type
+                LEAF_TYPE --input_path INPUT_PATH --target_path TARGET_PATH
+                --folderish_type FOLDERISH_TYPE [--no_wait]
+                [--poll_interval SLEEP]
+
+run import of a folder into nuxeo
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --no_wait             don&#39;t poll/wait for the job to finish
+  --poll_interval SLEEP
+                        seconds to sleep for if waiting
+
+common options for pynux commands:
+  --loglevel LOGLEVEL   CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                        ERROR
+  --rcfile RCFILE       path to ConfigParser compatible ini file
+
+there are four required arguments:
+  --leaf_type LEAF_TYPE
+                        nuxeo document type for imported leaf nodes
+  --input_path INPUT_PATH
+                        unix path to files
+  --target_path TARGET_PATH
+                        target document for import in nuxeo (parent folder
+                        where new folder will be created)
+  --folderish_type FOLDERISH_TYPE
+                        nuxeo document type for imported folder
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="module-pynux.utils">
+<span id="library"></span><h2>Library<a class="headerlink" href="#module-pynux.utils" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pynux-utils">
+<h3>pynux.utils<a class="headerlink" href="#pynux-utils" title="Permalink to this headline">¶</a></h3>
+<p>python function library for working with nuxeo &#8220;REST&#8221; APIs.</p>
+</div>
+<dl class="class">
+<dt id="pynux.utils.Nuxeo">
+<em class="property">class </em><tt class="descclassname">pynux.utils.</tt><tt class="descname">Nuxeo</tt><big>(</big><em>conf={}</em>, <em>rcfile='.pynuxrc'</em>, <em>loglevel='ERROR'</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo" title="Permalink to this definition">¶</a></dt>
+<dd><p>utility functions for nuxeo</p>
+<p>Object&#8217;s data keeps track of URLs and credentials
+for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
+<dl class="method">
+<dt id="pynux.utils.Nuxeo._get_iter">
+<tt class="descname">_get_iter</tt><big>(</big><em>url</em>, <em>params</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo._get_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>generator iterator for nuxeo results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo._get_page">
+<tt class="descname">_get_page</tt><big>(</big><em>url</em>, <em>params</em>, <em>current_page_index</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo._get_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a single page of nuxeo API results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo._mkdir">
+<tt class="descname">_mkdir</tt><big>(</big><em>newdir</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo._mkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>works the way a good mkdir should :)
+- already exists, silently complete
+- regular file in the way, raise an exception
+- parent directory(ies) does not exist, make them as well</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.all">
+<tt class="descname">all</tt><big>(</big><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>.nxql(&#8220;SELECT * FROM Document&#8221;)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.call_file_importer_api">
+<tt class="descname">call_file_importer_api</tt><big>(</big><em>verb</em>, <em>params={}</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.call_file_importer_api" title="Permalink to this definition">¶</a></dt>
+<dd><p>generic wrapper to make GET calls to this API</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.children">
+<tt class="descname">children</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>get child documents of a path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.get_metadata">
+<tt class="descname">get_metadata</tt><big>(</big><em>**documentid</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>get metadata for a <cite>uid</cite> or <cite>path</cite> parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.get_uid">
+<tt class="descname">get_uid</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.get_uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>look up uid from the path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.import_log">
+<tt class="descname">import_log</tt><big>(</big><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.import_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>show small part of file importer log</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.import_log_activate">
+<tt class="descname">import_log_activate</tt><big>(</big><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.import_log_activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>activate file importer log</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.import_one_folder">
+<tt class="descname">import_one_folder</tt><big>(</big><em>leaf_type</em>, <em>input_path</em>, <em>target_path</em>, <em>folderish_type</em>, <em>wait=True</em>, <em>sleep=20</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.import_one_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>trigger an import and wait for it to finish</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.import_status_wait">
+<tt class="descname">import_status_wait</tt><big>(</big><em>wait=True</em>, <em>sleep=20</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.import_status_wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>check import status and wait for Not Running</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.nxql">
+<tt class="descname">nxql</tt><big>(</big><em>query</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.nxql" title="Permalink to this definition">¶</a></dt>
+<dd><p>generice nxql query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynux.utils.Nuxeo.update_nuxeo_properties">
+<tt class="descname">update_nuxeo_properties</tt><big>(</big><em>data</em>, <em>**documentid</em><big>)</big><a class="headerlink" href="#pynux.utils.Nuxeo.update_nuxeo_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>update nuxeo document properties, <cite>uid=</cite> or <cite>path=</cite> parameter</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pynux.utils.get_common_options">
+<tt class="descclassname">pynux.utils.</tt><tt class="descname">get_common_options</tt><big>(</big><em>argparse_parser</em><big>)</big><a class="headerlink" href="#pynux.utils.get_common_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>common options for command line programs that use the library</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">an argparse parser</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">argparse parser parameter group</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pynux documentation</a><ul>
+<li><a class="reference internal" href="#rest-api-commands">Rest API Commands</a><ul>
+<li><a class="reference internal" href="#nxls">nxls</a></li>
+<li><a class="reference internal" href="#nxql">nxql</a></li>
+<li><a class="reference internal" href="#nxql-all">nxql_all</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#platform-bulk-importer-commands">Platform (bulk) importer commands</a><ul>
+<li><a class="reference internal" href="#pilog">pilog</a></li>
+<li><a class="reference internal" href="#pistatus">pistatus</a></li>
+<li><a class="reference internal" href="#pifolder">pifolder</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pynux.utils">Library</a><ul>
+<li><a class="reference internal" href="#pynux-utils">pynux.utils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">pynux 0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, UC Regents.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
