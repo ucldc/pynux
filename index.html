@@ -244,10 +244,23 @@ there are four required arguments:
 </div>
 </div>
 </div>
-<div class="section" id="module-pynux.utils">
-<span id="library"></span><h2>Library<a class="headerlink" href="#module-pynux.utils" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="pynux-utils">
-<h3>pynux.utils<a class="headerlink" href="#pynux-utils" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="library">
+<h2>Library<a class="headerlink" href="#library" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="library-example">
+<h3>Library Example<a class="headerlink" href="#library-example" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pynux</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">Nuxeo</span><span class="p">()</span>
+
+<span class="n">nx</span><span class="o">.</span><span class="n">nxql</span><span class="p">(</span><span class="s">&#39;SELECT * from Documents&#39;</span><span class="p">);</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">children</span><span class="p">(</span><span class="s">&quot;asset-library&quot;</span><span class="p">)</span>
+<span class="n">uid</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_uid</span><span class="p">(</span><span class="s">&quot;asset-library&quot;</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">(</span><span class="n">uid</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s">&quot;asset-library&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="target" id="module-pynux.utils"></span><div class="section" id="pynux-utils">
+<h4>pynux.utils<a class="headerlink" href="#pynux-utils" title="Permalink to this headline">¶</a></h4>
 <p>python function library for working with nuxeo &#8220;REST&#8221; APIs.</p>
 </div>
 <dl class="class">
@@ -261,7 +274,7 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>conf</strong> &#8211; dictionary with user:, password:, api: and/or fileImporter: to override defaults</li>
+<li><strong>conf</strong> &#8211; dictionary with <tt class="docutils literal"><span class="pre">&quot;user&quot;:</span></tt>, <tt class="docutils literal"><span class="pre">&quot;password&quot;:</span></tt>, <tt class="docutils literal"><span class="pre">&quot;api&quot;:</span></tt> <tt class="docutils literal"><span class="pre">&quot;fileImporter&quot;:</span></tt> and/or <tt class="docutils literal"><span class="pre">&quot;X-NXDocumentProperties&quot;:</span></tt> to override defaults</li>
 <li><strong>rcfile</strong> &#8211; <cite>ConfigParser</cite></li>
 <li><strong>loglevel</strong> &#8211; for standard library <cite>logging</cite></li>
 </ul>
@@ -487,6 +500,7 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 
 </div>
 </div>
+</div>
 
 
           </div>
@@ -516,8 +530,11 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <li><a class="reference internal" href="#pifolder">pifolder</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pynux.utils">Library</a><ul>
+<li><a class="reference internal" href="#library">Library</a><ul>
+<li><a class="reference internal" href="#library-example">Library Example</a><ul>
 <li><a class="reference internal" href="#pynux-utils">pynux.utils</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
