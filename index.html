@@ -55,10 +55,23 @@
 <h1>pynux documentation<a class="headerlink" href="#pynux-documentation" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://github.com/ucldc/pynux">code on github</a></p>
 <p><a class="reference external" href="https://github.com/ucldc/pynux/blob/master/README.md">README and LICENSE</a></p>
+<p><a class="reference external" href="http://www.nuxeo.com/en/products/nuxeo-platform-5.8">for use with Nuxeo Platform 5.8</a></p>
 <div class="section" id="rest-api-commands">
 <h2>Rest API Commands<a class="headerlink" href="#rest-api-commands" title="Permalink to this headline">¶</a></h2>
+<p>``
+<a class="reference external" href="http://doc.nuxeo.com/display/public/NXDOC/REST+API">nuxeo-rest-api</a>
+``
+just a small part of this API is implimented in <tt class="docutils literal"><span class="pre">pynux</span></tt>.</p>
+<div class="section" id="listing-commands">
+<h3>listing commands<a class="headerlink" href="#listing-commands" title="Permalink to this headline">¶</a></h3>
+<p>These commands list documents in nuxeo.</p>
+<p>By default <tt class="docutils literal"><span class="pre">uid</span></tt> and <tt class="docutils literal"><span class="pre">path</span></tt> with be printed on standard out.</p>
+<p>Specifing an <tt class="docutils literal"><span class="pre">--outdir</span></tt> parameter with a directory name will cause a
+JSON dump of the list to be output, with one <tt class="docutils literal"><span class="pre">.json</span></tt> file per
+document.  <strong>TODO:</strong> what if a document path contains <tt class="docutils literal"><span class="pre">.json</span></tt>?  Should
+outdir use uids for file names?</p>
 <div class="section" id="nxls">
-<h3>nxls<a class="headerlink" href="#nxls" title="Permalink to this headline">¶</a></h3>
+<h4>nxls<a class="headerlink" href="#nxls" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-text"><div class="highlight"><pre>usage: nxls [-h] [--outdir OUTDIR] [--loglevel LOGLEVEL] [--rcfile RCFILE]
             path
 
@@ -79,7 +92,7 @@ common options for pynux commands:
 </div>
 </div>
 <div class="section" id="nxql">
-<h3>nxql<a class="headerlink" href="#nxql" title="Permalink to this headline">¶</a></h3>
+<h4>nxql<a class="headerlink" href="#nxql" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-text"><div class="highlight"><pre>usage: nxql [-h] [--outdir OUTDIR] [--loglevel LOGLEVEL] [--rcfile RCFILE]
             nxql
 
@@ -100,7 +113,9 @@ common options for pynux commands:
 </div>
 </div>
 <div class="section" id="nxql-all">
-<h3>nxql_all<a class="headerlink" href="#nxql-all" title="Permalink to this headline">¶</a></h3>
+<h4>nxql_all<a class="headerlink" href="#nxql-all" title="Permalink to this headline">¶</a></h4>
+<p><tt class="docutils literal"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">Documents</span></tt></p>
+<p>Does not support <tt class="docutils literal"><span class="pre">--outdir</span></tt></p>
 <div class="highlight-text"><div class="highlight"><pre>usage: nxql_all [-h] [--loglevel LOGLEVEL] [--rcfile RCFILE]
 
 nuxeo metadata via REST API
@@ -115,8 +130,20 @@ common options for pynux commands:
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="update-command">
+<h3>update command<a class="headerlink" href="#update-command" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="nxup1">
-<h3>nxup1<a class="headerlink" href="#nxup1" title="Permalink to this headline">¶</a></h3>
+<h4>nxup1<a class="headerlink" href="#nxup1" title="Permalink to this headline">¶</a></h4>
+<p>update one nuxeo document from a <tt class="docutils literal"><span class="pre">.json</span></tt> input file.</p>
+<p>if no uid nor path was specified on the command line, then look in the
+JSON file and prefer
+<tt class="docutils literal"><span class="pre">&quot;path&quot;:</span></tt> to <tt class="docutils literal"><span class="pre">&quot;uid&quot;:</span></tt> when because the JSON file may have
+come from another machine where the uuids are different.  If no
+documentid is found it exits with an error.</p>
+<p>Nuxeo JSON output is returned on standard out.  Nuxeo returns the
+JSON of the updated document.  (<strong>TODO</strong> I guess nxup1 could check the
+returned JSON and make sure it looks like the update was a-okay.)</p>
 <div class="highlight-text"><div class="highlight"><pre>usage: nxup1 [-h] [--uid UID | --path PATH] [--loglevel LOGLEVEL]
              [--rcfile RCFILE]
              file
@@ -139,10 +166,13 @@ common options for pynux commands:
 </div>
 </div>
 </div>
+</div>
 <div class="section" id="platform-bulk-importer-commands">
 <h2>Platform (bulk) importer commands<a class="headerlink" href="#platform-bulk-importer-commands" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer">nuxeo-platform-importer</a></p>
 <div class="section" id="pilog">
 <h3>pilog<a class="headerlink" href="#pilog" title="Permalink to this headline">¶</a></h3>
+<p>init and set up logging.</p>
 <div class="highlight-text"><div class="highlight"><pre>usage: pilog [-h] [--activate] [--loglevel LOGLEVEL] [--rcfile RCFILE]
 
 nuxeo platform importer log/logActivate
@@ -160,6 +190,9 @@ common options for pynux commands:
 </div>
 <div class="section" id="pistatus">
 <h3>pistatus<a class="headerlink" href="#pistatus" title="Permalink to this headline">¶</a></h3>
+<p>check if an import is running.  Don&#8217;t run more than one job at once!
+Will return HTTP result from nuxeo on standard out which will either
+be <tt class="docutils literal"><span class="pre">Running</span></tt> or <tt class="docutils literal"><span class="pre">Not</span> <span class="pre">Running</span></tt>.</p>
 <div class="highlight-text"><div class="highlight"><pre>usage: pistatus [-h] [--loglevel LOGLEVEL] [--rcfile RCFILE]
 
 nuxeo platform importer status
@@ -176,6 +209,9 @@ common options for pynux commands:
 </div>
 <div class="section" id="pifolder">
 <h3>pifolder<a class="headerlink" href="#pifolder" title="Permalink to this headline">¶</a></h3>
+<p>Trigger <tt class="docutils literal"><span class="pre">/run</span></tt> of bulk importer.  By default, it won&#8217;t exit until
+the async loading is finished, so that it can be used from a batch
+script.</p>
 <div class="highlight-text"><div class="highlight"><pre>usage: pifolder [-h] [--loglevel LOGLEVEL] [--rcfile RCFILE] --leaf_type
                 LEAF_TYPE --input_path INPUT_PATH --target_path TARGET_PATH
                 --folderish_type FOLDERISH_TYPE [--no_wait]
@@ -462,10 +498,16 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
   <ul>
 <li><a class="reference internal" href="#">pynux documentation</a><ul>
 <li><a class="reference internal" href="#rest-api-commands">Rest API Commands</a><ul>
+<li><a class="reference internal" href="#listing-commands">listing commands</a><ul>
 <li><a class="reference internal" href="#nxls">nxls</a></li>
 <li><a class="reference internal" href="#nxql">nxql</a></li>
 <li><a class="reference internal" href="#nxql-all">nxql_all</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#update-command">update command</a><ul>
 <li><a class="reference internal" href="#nxup1">nxup1</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#platform-bulk-importer-commands">Platform (bulk) importer commands</a><ul>
