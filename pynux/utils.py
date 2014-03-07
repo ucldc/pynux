@@ -79,7 +79,9 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         # log some stuff
         self.logger = logging.getLogger(__name__)
         self.logger.info("init Nuxeo object")
-        self.logger.debug(self.conf)
+        redacted = self.conf
+        redacted.update({'password':'...redacted...'})
+        self.logger.debug(redacted)
 
 
     ## Python generator for paged API resource
