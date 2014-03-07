@@ -5,6 +5,23 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
+## Install
+
+```
+pip install git+git://github.com/ucldc/pynux.git
+```
+or
+```
+git clone https://github.com/ucldc/pynux.git
+cd pynux
+python setup.py install
+```
+
+### test
+```
+python setup.py test
+```
+
 ## [Command documentation and API Documentation](http://ucldc.github.io/pynux/)
 
 ## Requirements
