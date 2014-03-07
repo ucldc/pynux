@@ -41,9 +41,7 @@ python setup.py test
  * [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer)
  * `nuxeoctl mp-install nuxeo-platform-importer`
 
-## Example
-
-### Library
+## Library Example
 
 ```python
 from pynux import utils
@@ -57,7 +55,7 @@ nx.get_metadata(uid=uid)
 nx.get_metadata(path="asset-library")
 ```
 
-### config
+## Configuration
 
 The following is the default configuration:
 
@@ -77,7 +75,7 @@ Defaults can be overridden by setting them in `~/.pynuxrc` or `./.pynuyxrc`.
 
 It may be advisable to `chmod 600 .pynuxrc`.
 
-# License 
+## License 
 
 Copyright © 2014, Regents of the University of California
 
