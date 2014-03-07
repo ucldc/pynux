@@ -3,10 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pynux's documentation!
-=================================
+pynux documentation
+===================
 
-Contents:
+`code on github
+<https://github.com/ucldc/pynux>`_
+
+`README and LICENSE
+<https://github.com/ucldc/pynux/blob/master/README.md>`_
 
 
 Rest API Commands

@@ -5,6 +5,8 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
+[Command and Library Documentation](http://ucldc.github.io/pynux/)
+
 ## Requirements
 
 ### REST API
