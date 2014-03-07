@@ -31,14 +31,12 @@ class Nuxeo:
     Object's data keeps track of URLs and credentials
     for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
 
-    :param conf: dictionary with user:, password:, api: and/or fileImporter: to override defaults
+    :param conf: dictionary with ``"user":``, ``"password":``, ``"api":`` ``"fileImporter":`` and/or ``"X-NXDocumentProperties":`` to override defaults
     :param rcfile: `ConfigParser`
     :param loglevel: for standard library `logging`
     """
     def __init__(self, conf={}, rcfile=_rcfile_, loglevel=_loglevel_):
-        """configuration for http connections"""
-        self.logger = logging.getLogger(__name__)
-        self.logger.info("Nuxeo object init")
+        """configuration for http connections and options"""
         defaultrc = """\
 [nuxeo_account]
 user = Administrator
@@ -46,6 +44,7 @@ password = Administrator
 
 [rest_api]
 base = http://localhost:8080/nuxeo/site/api/v1
+X-NXDocumentProperties = dublincore
 
 [platform_importer]
 base = http://localhost:8080/nuxeo/site/fileImporter
@@ -58,21 +57,29 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         config.readfp(io.BytesIO(defaultrc))
         config.read(config_files)
         defaults = {
-            "user":         config.get('nuxeo_account', 'user'),
-            "password":     config.get('nuxeo_account', 'password'),
-            "api":          config.get('rest_api', 'base'),
-            "fileImporter": config.get('platform_importer', 'base')
+            "user":                   config.get('nuxeo_account', 'user'),
+            "password":               config.get('nuxeo_account', 'password'),
+            "api":                    config.get('rest_api', 'base'),
+            "X-NXDocumentProperties": config.get('rest_api', 'X-NXDocumentProperties'),
+            "fileImporter":           config.get('platform_importer', 'base')
         }
         self.conf = {}
         self.conf.update(defaults)
         self.conf.update(conf)
+        
         self.auth = (self.conf["user"], self.conf["password"])
+        self.document_property_headers = {'X-NXDocumentProperties':
+                                          self.conf['X-NXDocumentProperties']}
 
         # set debugging level
         numeric_level = getattr(logging, loglevel, None)
         if not isinstance(numeric_level, int):
             raise ValueError('Invalid log level: %s' % argv.loglevel)
         logging.basicConfig(level=numeric_level, )
+        # log some stuff
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("init Nuxeo object")
+        self.logger.debug(self.conf)
 
 
     ## Python generator for paged API resource
@@ -176,8 +183,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             url = os.path.join(self.conf['api'], "id", documentid['uid'])
         else:
             raise Exception("no document id found")
-        headers = {'X-NXDocumentProperties': 'ucldc_schema,dublincore'}
-        res = requests.get(url, headers=headers, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)
 
@@ -197,9 +203,9 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = os.path.join(self.conf['api'], "id", uid)
-        # TODO: let headers be specified, use these as defaults
-        headers = {'X-NXDocumentProperties': 'ucldc_schema,dublincore',
-                   'Content-Type': 'application/json+nxentity'}
+        headers = self.document_property_headers
+        headers.update({'Content-Type': 'application/json+nxentity'})
+
         # copy what we want from the input json into the payload
         payload = {}
         payload['uid'] = uid

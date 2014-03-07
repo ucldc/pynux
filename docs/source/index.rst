@@ -105,6 +105,23 @@ script.
 Library
 -------
 
+
+Library Example
+~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    from pynux import utils
+    nx = utils.Nuxeo()
+
+    nx.nxql('SELECT * from Documents');
+    nx.all()
+    nx.children("asset-library")
+    uid = nx.get_uid("asset-library")
+    nx.get_metadata(uid=uid)
+    nx.get_metadata(path="asset-library")
+
+
 .. automodule:: pynux.utils
 
 .. autoclass:: pynux.utils.Nuxeo

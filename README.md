@@ -41,20 +41,6 @@ python setup.py test
  * [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer)
  * `nuxeoctl mp-install nuxeo-platform-importer`
 
-## Library Example
-
-```python
-from pynux import utils
-nx = utils.Nuxeo()
-
-nx.nxql('SELECT * from Documents');
-nx.all()
-nx.children("asset-library")
-uid = nx.get_uid("asset-library")
-nx.get_metadata(uid=uid)
-nx.get_metadata(path="asset-library")
-```
-
 ## Configuration
 
 The following is the default configuration:
@@ -66,6 +52,7 @@ password = Administrator
 
 [rest_api]
 base = http://localhost:8080/nuxeo/site/api/v1
+X-NXDocumentProperties = dublincore
 
 [platform_importer]
 base = http://localhost:8080/nuxeo/site/fileImporter
