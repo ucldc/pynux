@@ -22,7 +22,7 @@ import io
 import argparse
 
 _loglevel_ = 'ERROR'
-_rcfile_ = ''.join(['.', __name__, 'rc'])
+_rcfile_ = '.pynuxrc'
 _version_ = '0.0.0'
 
 class Nuxeo:
