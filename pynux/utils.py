@@ -26,11 +26,14 @@ _rcfile_ = ''.join(['.', __name__, 'rc'])
 _version_ = '0.0.0'
 
 class Nuxeo:
-    """
-    utility functions for nuxeo
+    """utility functions for nuxeo
 
     Object's data keeps track of URLs and credentials
     for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
+
+    :param conf: dictionary with user:, password:, api: and/or fileImporter: to override defaults
+    :param rcfile: `ConfigParser`
+    :param loglevel: for standard library `logging`
     """
     def __init__(self, conf={}, rcfile=_rcfile_, loglevel=_loglevel_):
         """configuration for http connections"""
@@ -77,7 +80,15 @@ base = http://localhost:8080/nuxeo/site/fileImporter
     #    see also [Loop like a native](http://www.youtube.com/watch?v=EnSu9hHGq5o)
 
     def _get_page(self, url, params, current_page_index):
-        """get a single page of nuxeo API results"""
+        """get a single page of nuxeo API results
+
+        :param url: url before query string
+        :param params:
+        :type params: dict of cgi paramaters
+        :param current_page_index: current page (index 0)
+        :type current_page_index: int
+        :returns: json from nuxeo
+        """
         params.update({'currentPageIndex': current_page_index})
         res = requests.get(url, params=params, auth=self.auth)
         res.raise_for_status()
@@ -85,7 +96,13 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         return json.loads(res.text)
 
     def _get_iter(self, url, params):
-        """generator iterator for nuxeo results"""
+        """generator iterator for nuxeo results
+
+        :param url: url before query string
+        :param params:
+        :type params: dict of cgi paramaters
+        :returns: iterator of nuxeo API results
+        """
         for current_page_index in itertools.count():
             result_dict = self._get_page(url, params, current_page_index)
             for document in result_dict['entries']:
@@ -97,7 +114,10 @@ base = http://localhost:8080/nuxeo/site/fileImporter
     # uses NUXEO_REST_API in self.conf['api']
 
     def nxql(self, query):
-        """generice nxql query"""
+        """generic nxql query
+
+        :returns: iterator of nuxeo API results
+        """
         url = os.path.join(self.conf["api"], "path/@search")
         params = {
             'pageSize': '100',
@@ -108,11 +128,17 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         return self._get_iter(url, params)
 
     def all(self):
-        """.nxql("SELECT * FROM Document")"""
+        """.nxql("SELECT * FROM Document")
+
+        :returns: iterator of nuxeo API results
+        """
         return self.nxql('SELECT * FROM Document')
 
     def children(self, path):
-        """get child documents of a path"""
+        """get child documents of a path
+
+        :returns: iterator of nuxeo API results
+        """
         url = os.path.join(self.conf["api"], "path",
                            path.strip("/"), "@children")
         params = {}
@@ -121,7 +147,13 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         return self._get_iter(url, params)
 
     def get_uid(self, path):
-        """look up uid from the path"""
+        """look up uid from the path
+
+        :param path: nuxeo path for a document
+        :type path: string
+        :returns: uid
+        :rtype: string
+        """
         url = os.path.join(self.conf['api'],  "path",
                            path.strip("/"))
         res = requests.get(url, auth=self.auth)
@@ -129,7 +161,11 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         return json.loads(res.text)['uid']
 
     def get_metadata(self, **documentid):
-        """get metadata for a `uid` or `path` parameter"""
+        """get metadata for a document
+
+        :param documentid: either uid= or path=
+        :returns: json from nuxeo
+        """
         if len(documentid) != 1:
             raise TypeError("either uid or path")
         url = ""
@@ -146,7 +182,13 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         return json.loads(res.text)
 
     def update_nuxeo_properties(self, data, **documentid):
-        """update nuxeo document properties, `uid=` or `path=` parameter"""
+        """update nuxeo document properties
+
+        :param data: document properties for nuxeo update
+        :type data: dict
+        :param documentid: either uid= or path=
+        :returns: updated json from nuxeo
+        """
         uid = ''
         if len(documentid) != 1:
             raise TypeError("either uid or path")
@@ -213,7 +255,16 @@ base = http://localhost:8080/nuxeo/site/fileImporter
     def import_one_folder(self,
                           leaf_type, input_path, target_path, folderish_type,
                           wait=True, sleep=20):
-        """trigger an import and wait for it to finish"""
+        """trigger an import and wait for it to finish
+
+        :param leaf_type: nuxeo document type for imported files
+        :param input_path: path on local file system
+        :param target_path: parent path in Nuxeo
+        :param folderish_type: nuxeo document type of new folder
+        :param wait: boolean (True to poll)
+        :param sleep: float (how long to sleep during poll)
+        :returns: STDOUT
+        """
         if not leaf_type and input_path and target_path and folderish_type:
             raise TypeError("missing required value")
         params = {
@@ -273,7 +324,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 def get_common_options(argparse_parser):
     """ common options for command line programs that use the library
 
-        :param: an argparse parser
+        :param argvarse_parser: an argparse parser
         :returns: argparse parser parameter group
     """
     common_options = argparse_parser.add_argument_group(
