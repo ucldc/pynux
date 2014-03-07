@@ -26,6 +26,8 @@ python setup.py test
 
 ## Requirements
 
+### [Nuxeo Platform 5.8 with DAM module](http://www.nuxeo.com/)
+
 ### REST API
 
  * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/NXDOC/REST+API) 
