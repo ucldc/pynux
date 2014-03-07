@@ -69,7 +69,7 @@ positional arguments:
 
 optional arguments:
   -h, --help           show this help message and exit
-  --outdir OUTDIR
+  --outdir OUTDIR      directory to hold application/json+nxentity .json files
 
 common options for pynux commands:
   --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
@@ -90,7 +90,7 @@ positional arguments:
 
 optional arguments:
   -h, --help           show this help message and exit
-  --outdir OUTDIR
+  --outdir OUTDIR      directory to hold application/json+nxentity .json files
 
 common options for pynux commands:
   --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
@@ -107,6 +107,29 @@ nuxeo metadata via REST API
 
 optional arguments:
   -h, --help           show this help message and exit
+
+common options for pynux commands:
+  --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
+                       ERROR
+  --rcfile RCFILE      path to ConfigParser compatible ini file
+</pre></div>
+</div>
+</div>
+<div class="section" id="nxup1">
+<h3>nxup1<a class="headerlink" href="#nxup1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text"><div class="highlight"><pre>usage: nxup1 [-h] [--uid UID | --path PATH] [--loglevel LOGLEVEL]
+             [--rcfile RCFILE]
+             file
+
+nuxeo metadata via REST API, one record
+
+positional arguments:
+  file                 application/json+nxentity
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --uid UID            update specific nuxeo uid
+  --path PATH          update specific nuxeo path
 
 common options for pynux commands:
   --loglevel LOGLEVEL  CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is
@@ -318,6 +341,7 @@ for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API</p>
 <li><a class="reference internal" href="#nxls">nxls</a></li>
 <li><a class="reference internal" href="#nxql">nxql</a></li>
 <li><a class="reference internal" href="#nxql-all">nxql_all</a></li>
+<li><a class="reference internal" href="#nxup1">nxup1</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#platform-bulk-importer-commands">Platform (bulk) importer commands</a><ul>

@@ -28,6 +28,10 @@ nxql_all
 ~~~~~~~~
 .. program-output:: nxql_all -h
 
+nxup1
+~~~~~
+.. program-output:: nxup1 -h
+
 Platform (bulk) importer commands
 ---------------------------------
 
