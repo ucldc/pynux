@@ -105,9 +105,7 @@ script.
 Library
 -------
 
-
-Library Example
-~~~~~~~~~~~~~~~
+short example
 
 .. code:: python
 
