@@ -296,13 +296,13 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         url = "{0}/{1}".format(self.conf['fileImporter'], "status")
         res = requests.get(url, auth=self.auth)
         res.raise_for_status()
-        if res.text == 'Not Running':
-            return True
-        else:
+        # http://programmers.stackexchange.com/a/215261/124939
+        while res.text != 'Not Running':
             sys.stdout.write('.')
             sys.stdout.flush()
             time.sleep(sleep)
-            self.import_status_wait()
+            res = requests.get(url, auth=self.auth)
+            res.raise_for_status()
 
     ## utility functions
     #  generic snippts not customzied to this project
