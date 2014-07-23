@@ -33,6 +33,10 @@ def main(argv=None):
         dest="sleep",
         default=20,
         type=int)
+    parser.add_argument('--skip_root_folder_creation',
+        help="don't create root folder on import",
+        dest="skip_root_folder_creation",
+        action="store_true")
     if argv is None:
         argv = parser.parse_args()
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
@@ -42,7 +46,8 @@ def main(argv=None):
         argv.target_path,
         argv.folderish_type,
         wait=argv.no_wait,
-        sleep=argv.sleep)
+        sleep=argv.sleep,
+        skip_root_folder_creation=argv.skip_root_folder_creation)
     print nx.call_file_importer_api('status')
     print nx.import_log()
 
