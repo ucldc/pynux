@@ -262,7 +262,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def import_one_folder(self,
                           leaf_type, input_path, target_path, folderish_type,
-                          wait=True, sleep=20):
+                          wait=True, sleep=20, skip_root_folder_creation=False):
         """trigger an import and wait for it to finish
 
         :param leaf_type: nuxeo document type for imported files
@@ -271,6 +271,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :param folderish_type: nuxeo document type of new folder
         :param wait: boolean (True to poll)
         :param sleep: float (how long to sleep during poll)
+        :param skip_root_folder_creation: boolean (True to skip root folder creation)
         :returns: STDOUT
         """
         if not leaf_type and input_path and target_path and folderish_type:
@@ -280,6 +281,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             "inputPath": input_path,
             "targetPath": target_path,
             "folderishType": folderish_type,
+            "skipRootContainerCreation": skip_root_folder_creation,
         }
         # only one import can run at a time
         self.import_status_wait(wait=wait, sleep=sleep)
