@@ -8,7 +8,7 @@ pynux.utils
 python function library for working with nuxeo "REST" APIs.
 
 """
-
+from __future__ import unicode_literals
 import requests
 import json
 import sys
@@ -54,7 +54,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             rcfile
         ]
         config = ConfigParser.SafeConfigParser()
-        config.readfp(io.BytesIO(defaultrc))
+        config.readfp(io.BytesIO(bytes(defaultrc)))
         config.read(config_files)
         defaults = {
             "user":                   config.get('nuxeo_account', 'user'),
@@ -221,7 +221,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def print_document_summary(self, documents):
         for document in documents:
-            print "{0}\t{1}".format(document['uid'], document['path'])
+            print "{0}\t{1}".format(document['uid'], document['path']).encode('utf-8')
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:
