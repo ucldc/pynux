@@ -175,16 +175,14 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :param documentid: either uid= or path=
         :returns: json from nuxeo
         """
+        uid = ''
         if len(documentid) != 1:
             raise TypeError("either uid or path")
-        url = ""
         if 'path' in documentid:
-            url = os.path.join(self.conf['api'], "path",
-                               documentid['path'].strip("/"))
+            uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
-            url = os.path.join(self.conf['api'], "id", documentid['uid'])
-        else:
-            raise Exception("no document id found")
+            uid = documentid['uid']
+        url = os.path.join(self.conf['api'], "id", uid)
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)
@@ -225,13 +223,12 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:
-            path = document['path']
-            path = path.strip("/")
-            file = os.path.join(local, ''.join([path.strip("/"), ".json"]))
+            uid = document['uid']
+            file = os.path.join(local, ''.join([uid, ".json"]))
             dir = os.path.dirname(file)
             self._mkdir(dir)
             with open(file, 'w') as json_file:
-                py_json = self.get_metadata(path=path)
+                py_json = self.get_metadata(uid=uid)
                 out_json = {}
                 out_json['uid'] = py_json['uid']
                 out_json['path'] = py_json['path']

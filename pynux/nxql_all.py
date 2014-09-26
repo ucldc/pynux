@@ -3,11 +3,14 @@
 
 import sys
 import argparse
+import os
 from pynux import utils
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
+    parser.add_argument('--outdir',
+        help="directory to hold application/json+nxentity .json files")
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
@@ -16,7 +19,14 @@ def main(argv=None):
     # todo; add these defaults as parameters as well as env
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     documents = nx.all()
-    nx.print_document_summary(documents)
+
+    if argv.outdir:
+        # Expand user- and relative-paths
+        outdir = os.path.abspath(os.path.expanduser(argv.outdir))
+        nx.copy_metadata_to_local(documents, outdir)
+    else:
+        nx.print_document_summary(documents)
+
 
 
 # main() idiom for importing into REPL for debugging
