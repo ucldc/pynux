@@ -22,7 +22,7 @@ import io
 import argparse
 
 _loglevel_ = 'ERROR'
-_rcfile_ = '.pynuxrc'
+_rcfile_ = '~.pynuxrc'
 _version_ = '0.0.0'
 
 class Nuxeo:
@@ -50,8 +50,7 @@ X-NXDocumentProperties = dublincore
 base = http://localhost:8080/nuxeo/site/fileImporter
 """
         config_files = [
-            os.path.join(expanduser("~"),'.pynuxrc'),
-            rcfile
+            expanduser(rcfile)
         ]
         config = ConfigParser.SafeConfigParser()
         config.readfp(io.BytesIO(bytes(defaultrc)))
