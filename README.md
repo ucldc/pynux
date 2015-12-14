@@ -43,7 +43,11 @@ python setup.py test
 
 ## Configuration
 
-The following is the default configuration:
+To configure pynux, you will need to create a file named `.pynuxrc`. You can use a simple text editor to create the file. In a Windows OS, the file should be placed in `C:\Users\Username\`. In a Mac OS, the file should be placed in `~/.pynuxrc` (open a terminal window and type `open .` for the correct location).   
+
+It may be advisable to `chmod 600 .pynuxrc`.
+
+The following is an example default configuration that can be copied-and-pasted into the `.pynuxrc` file:
 
 ```ini
 [nuxeo_account]
@@ -60,9 +64,22 @@ X-NXDocumentProperties = dublincore
 base = http://localhost:8080/nuxeo/site/fileImporter
 ```
 
-Defaults can be overridden by setting them in `~/.pynuxrc` or `./.pynuyxrc`.  
+To begin using pynux, use the specific configuration indicated below.  Contact your Nuxeo Administrator for user and password details:
 
-It may be advisable to `chmod 600 .pynuxrc`.
+```ini
+[nuxeo_account]
+user = 
+password = 
+
+[rest_api]
+base = https://nuxeo.cdlib.org/nuxeo/site/api/v1
+# X-NXDocumentProperties = dublincore
+# for developers on the UCLDC project; use
+X-NXDocumentProperties = dublincore,ucldc_schema,picture
+ 
+[platform_importer]
+base = https://nuxeo.cdlib.org/nuxeo/site/fileImporter
+```
 
 ## License 
 
