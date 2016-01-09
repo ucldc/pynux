@@ -4,6 +4,7 @@ import json
 import sys
 import re
 import os
+import io
 
 import unittest
 
@@ -11,8 +12,8 @@ class TestNuxeoREST(unittest.TestCase):
     def setUp(self):
         self.nx = utils.Nuxeo({
             'api': 'http://mockme/r',
-            "fileImporter": 'http://mockme/f'
-        })
+            'fileImporter': 'http://mockme/f',
+        }, rcfile=io.BytesIO(bytes()))
 
     @httpretty.activate
     def runTest(self):
