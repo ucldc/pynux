@@ -57,27 +57,42 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         # otherwise, check a default path in user directory
         elif not(rcfile) and os.path.isfile(expanduser('~/.pynuxrc')):
             config.read(expanduser('~/.pynuxrc'))
+
+        token_auth = bool(
+            config.has_option('nuxeo_account', 'method')
+            and config.get('nuxeo_account', 'method') == 'token'
+        )
+
         # these are the defaults from the config
         defaults = {
+            "auth_method":            'token' if token_auth else 'basic',
             "user":                   config.get('nuxeo_account', 'user'),
             "password":               config.get('nuxeo_account', 'password'),
             "api":                    config.get('rest_api', 'base'),
             "X-NXDocumentProperties": config.get('rest_api', 'X-NXDocumentProperties'),
-            "fileImporter":           config.get('platform_importer', 'base')
+            "fileImporter":           config.get('platform_importer', 'base'),
+            "X-Authentication-Token": config.get('nuxeo_account','X-Authentication-Token')
         }
         self.conf = {}
         self.conf.update(defaults)
         # override the defaults based on conf pased in by caller
         self.conf.update(conf)
-        
-        self.auth = (self.conf["user"], self.conf["password"])
+
+        # auth and headers for the request object
         self.document_property_headers = {'X-NXDocumentProperties':
                                           self.conf['X-NXDocumentProperties']}
+        if self.conf['auth_method'] == 'token':
+            self.document_property_headers.update({
+                'X-Authentication-Token': self.conf['X-Authentication-Token']
+            })
+            self.auth = None
+        else:
+            self.auth = (self.conf["user"], self.conf["password"])
 
         # set debugging level
         numeric_level = getattr(logging, loglevel, None)
         if not isinstance(numeric_level, int):
-            raise ValueError('Invalid log level: %s' % argv.loglevel)
+            raise ValueError('Invalid log level: %s' % loglevel)
         logging.basicConfig(level=numeric_level, )
         # log some stuff
         self.logger = logging.getLogger(__name__)
@@ -102,7 +117,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: json from nuxeo
         """
         params.update({'currentPageIndex': current_page_index})
-        res = requests.get(url, params=params, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
         self.logger.debug(res.text)
         return json.loads(res.text)
@@ -168,7 +183,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         """
         url = os.path.join(self.conf['api'],  "path",
                            path.strip("/"))
-        res = requests.get(url, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)['uid']
 
@@ -248,7 +263,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
     def call_file_importer_api(self, verb, params={}):
         """generic wrapper to make GET calls to this API"""
         url = "{0}/{1}".format(self.conf['fileImporter'], verb)
-        res = requests.get(url, params=params, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
         return res.text
 
@@ -296,14 +311,14 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             return True
         # poll the api to and wait for the run to finish...
         url = "{0}/{1}".format(self.conf['fileImporter'], "status")
-        res = requests.get(url, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         # http://programmers.stackexchange.com/a/215261/124939
         while res.text != 'Not Running':
             sys.stdout.write('.')
             sys.stdout.flush()
             time.sleep(sleep)
-            res = requests.get(url, auth=self.auth)
+            res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
             res.raise_for_status()
 
     ## utility functions
