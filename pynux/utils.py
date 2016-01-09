@@ -22,8 +22,7 @@ import io
 import argparse
 
 _loglevel_ = 'ERROR'
-_rcfile_ = '~/.pynuxrc'
-_version_ = '0.0.0'
+_version_ = '0.0.1'
 
 class Nuxeo:
     """utility functions for nuxeo
@@ -35,7 +34,7 @@ class Nuxeo:
     :param rcfile: `ConfigParser`
     :param loglevel: for standard library `logging`
     """
-    def __init__(self, conf={}, rcfile=_rcfile_, loglevel=_loglevel_):
+    def __init__(self, conf={}, rcfile=None, loglevel=_loglevel_):
         """configuration for http connections and options"""
         defaultrc = """\
 [nuxeo_account]
@@ -49,12 +48,16 @@ X-NXDocumentProperties = dublincore
 [platform_importer]
 base = http://localhost:8080/nuxeo/site/fileImporter
 """
-        config_files = [
-            expanduser(rcfile)
-        ]
         config = ConfigParser.SafeConfigParser()
+        # first level of defaults hardcoded above
         config.readfp(io.BytesIO(bytes(defaultrc)))
-        config.read(config_files)
+        # then, check for an rcfile supplied by the caller
+        if rcfile:
+            config.readfp(rcfile)
+        # otherwise, check a default path in user directory
+        elif not(rcfile) and os.path.isfile(expanduser('~/.pynuxrc')):
+            config.read(expanduser('~/.pynuxrc'))
+        # these are the defaults from the config
         defaults = {
             "user":                   config.get('nuxeo_account', 'user'),
             "password":               config.get('nuxeo_account', 'password'),
@@ -64,6 +67,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         }
         self.conf = {}
         self.conf.update(defaults)
+        # override the defaults based on conf pased in by caller
         self.conf.update(conf)
         
         self.auth = (self.conf["user"], self.conf["password"])
@@ -333,15 +337,24 @@ def get_common_options(argparse_parser):
         :param argvarse_parser: an argparse parser
         :returns: argparse parser parameter group
     """
+    def is_valid_file(argparse_parser, arg):
+        # http://stackoverflow.com/a/11541450/1763984
+        if not os.path.exists(arg):
+            argparse_parser.error("The file %s does not exist!" % arg)
+        else:
+            return open(arg, 'r')  # return an open file handle
+
     common_options = argparse_parser.add_argument_group(
         'common options for pynux commands')
     common_options.add_argument('--loglevel',
         default= _loglevel_,
         help=''.join(["CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is ",_loglevel_]))
     common_options.add_argument('--rcfile',
-        default= _rcfile_,
-        help="path to ConfigParser compatible ini file")
+        default=None,
+        help="path to ConfigParser compatible ini file",
+        type=lambda x: is_valid_file(argparse_parser, x))
     return common_options
+
 
 def test():
     """ Testing Docstring"""
@@ -351,7 +364,7 @@ if __name__ == '__main__':
     test()
 
 """
-Copyright © 2014, Regents of the University of California
+Copyright © 2016, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
