@@ -63,6 +63,10 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             and config.get('nuxeo_account', 'method') == 'token'
         )
 
+        token = None
+        if config.has_option('nuxeo_account', 'X-Authentication-Token'):
+            token = config.get('nuxeo_account','X-Authentication-Token')
+
         # these are the defaults from the config
         defaults = {
             "auth_method":            'token' if token_auth else 'basic',
@@ -71,7 +75,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             "api":                    config.get('rest_api', 'base'),
             "X-NXDocumentProperties": config.get('rest_api', 'X-NXDocumentProperties'),
             "fileImporter":           config.get('platform_importer', 'base'),
-            "X-Authentication-Token": config.get('nuxeo_account','X-Authentication-Token')
+            "X-Authentication-Token": token,
         }
         self.conf = {}
         self.conf.update(defaults)
