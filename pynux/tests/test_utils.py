@@ -4,6 +4,7 @@ import json
 import sys
 import re
 import os
+import io
 
 import unittest
 
@@ -11,8 +12,8 @@ class TestNuxeoREST(unittest.TestCase):
     def setUp(self):
         self.nx = utils.Nuxeo({
             'api': 'http://mockme/r',
-            "fileImporter": 'http://mockme/f'
-        })
+            'fileImporter': 'http://mockme/f',
+        }, rcfile=io.BytesIO(bytes()))
 
     @httpretty.activate
     def runTest(self):
@@ -41,13 +42,6 @@ class TestNuxeoREST(unittest.TestCase):
         assert(self.nx.get_metadata(uid= self.nx.get_uid("asset-library")))
         assert(self.nx.get_metadata(path="asset-library"))
 
-class TestConfigFile(unittest.TestCase):
-    '''Had a problem with the default config path. Check it here'''
-    def testRCFILE(self):
-        rcfile = utils._rcfile_
-        full_path = os.path.expanduser(rcfile)
-        # then expanded path should be different
-        self.assertNotEqual(full_path, utils._rcfile_)
 
 if __name__ == '__main__':
     unittest.main()

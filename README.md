@@ -64,26 +64,16 @@ X-NXDocumentProperties = dublincore
 base = http://localhost:8080/nuxeo/site/fileImporter
 ```
 
-To begin using pynux, use the specific configuration indicated below.  Contact your Nuxeo Administrator for user and password details:
-
+alternative authentication
 ```ini
 [nuxeo_account]
-user = 
-password = 
-
-[rest_api]
-base = https://nuxeo.cdlib.org/nuxeo/site/api/v1
-# X-NXDocumentProperties = dublincore
-# for developers on the UCLDC project; use
-X-NXDocumentProperties = dublincore,ucldc_schema,picture
- 
-[platform_importer]
-base = https://nuxeo.cdlib.org/nuxeo/site/fileImporter
+method = token
+X-Authentication-Token = xxxxxxx
 ```
 
 ## License 
 
-Copyright © 2014, Regents of the University of California
+Copyright © 2016, Regents of the University of California
 
 All rights reserved.
 

@@ -22,8 +22,7 @@ import io
 import argparse
 
 _loglevel_ = 'ERROR'
-_rcfile_ = '~/.pynuxrc'
-_version_ = '0.0.0'
+_version_ = '0.0.1'
 
 class Nuxeo:
     """utility functions for nuxeo
@@ -35,7 +34,7 @@ class Nuxeo:
     :param rcfile: `ConfigParser`
     :param loglevel: for standard library `logging`
     """
-    def __init__(self, conf={}, rcfile=_rcfile_, loglevel=_loglevel_):
+    def __init__(self, conf={}, rcfile=None, loglevel=_loglevel_):
         """configuration for http connections and options"""
         defaultrc = """\
 [nuxeo_account]
@@ -49,31 +48,55 @@ X-NXDocumentProperties = dublincore
 [platform_importer]
 base = http://localhost:8080/nuxeo/site/fileImporter
 """
-        config_files = [
-            expanduser(rcfile)
-        ]
         config = ConfigParser.SafeConfigParser()
+        # first level of defaults hardcoded above
         config.readfp(io.BytesIO(bytes(defaultrc)))
-        config.read(config_files)
+        # then, check for an rcfile supplied by the caller
+        if rcfile:
+            config.readfp(rcfile)
+        # otherwise, check a default path in user directory
+        elif not(rcfile) and os.path.isfile(expanduser('~/.pynuxrc')):
+            config.read(expanduser('~/.pynuxrc'))
+
+        token_auth = bool(
+            config.has_option('nuxeo_account', 'method')
+            and config.get('nuxeo_account', 'method') == 'token'
+        )
+
+        token = None
+        if config.has_option('nuxeo_account', 'X-Authentication-Token'):
+            token = config.get('nuxeo_account','X-Authentication-Token')
+
+        # these are the defaults from the config
         defaults = {
+            "auth_method":            'token' if token_auth else 'basic',
             "user":                   config.get('nuxeo_account', 'user'),
             "password":               config.get('nuxeo_account', 'password'),
             "api":                    config.get('rest_api', 'base'),
             "X-NXDocumentProperties": config.get('rest_api', 'X-NXDocumentProperties'),
-            "fileImporter":           config.get('platform_importer', 'base')
+            "fileImporter":           config.get('platform_importer', 'base'),
+            "X-Authentication-Token": token,
         }
         self.conf = {}
         self.conf.update(defaults)
+        # override the defaults based on conf pased in by caller
         self.conf.update(conf)
-        
-        self.auth = (self.conf["user"], self.conf["password"])
+
+        # auth and headers for the request object
         self.document_property_headers = {'X-NXDocumentProperties':
                                           self.conf['X-NXDocumentProperties']}
+        if self.conf['auth_method'] == 'token':
+            self.document_property_headers.update({
+                'X-Authentication-Token': self.conf['X-Authentication-Token']
+            })
+            self.auth = None
+        else:
+            self.auth = (self.conf["user"], self.conf["password"])
 
         # set debugging level
         numeric_level = getattr(logging, loglevel, None)
         if not isinstance(numeric_level, int):
-            raise ValueError('Invalid log level: %s' % argv.loglevel)
+            raise ValueError('Invalid log level: %s' % loglevel)
         logging.basicConfig(level=numeric_level, )
         # log some stuff
         self.logger = logging.getLogger(__name__)
@@ -98,7 +121,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: json from nuxeo
         """
         params.update({'currentPageIndex': current_page_index})
-        res = requests.get(url, params=params, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
         self.logger.debug(res.text)
         return json.loads(res.text)
@@ -164,7 +187,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         """
         url = os.path.join(self.conf['api'],  "path",
                            path.strip("/"))
-        res = requests.get(url, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)['uid']
 
@@ -244,7 +267,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
     def call_file_importer_api(self, verb, params={}):
         """generic wrapper to make GET calls to this API"""
         url = "{0}/{1}".format(self.conf['fileImporter'], verb)
-        res = requests.get(url, params=params, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
         return res.text
 
@@ -292,14 +315,14 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             return True
         # poll the api to and wait for the run to finish...
         url = "{0}/{1}".format(self.conf['fileImporter'], "status")
-        res = requests.get(url, auth=self.auth)
+        res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         # http://programmers.stackexchange.com/a/215261/124939
         while res.text != 'Not Running':
             sys.stdout.write('.')
             sys.stdout.flush()
             time.sleep(sleep)
-            res = requests.get(url, auth=self.auth)
+            res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
             res.raise_for_status()
 
     ## utility functions
@@ -333,15 +356,24 @@ def get_common_options(argparse_parser):
         :param argvarse_parser: an argparse parser
         :returns: argparse parser parameter group
     """
+    def is_valid_file(argparse_parser, arg):
+        # http://stackoverflow.com/a/11541450/1763984
+        if not os.path.exists(arg):
+            argparse_parser.error("The file %s does not exist!" % arg)
+        else:
+            return open(arg, 'r')  # return an open file handle
+
     common_options = argparse_parser.add_argument_group(
         'common options for pynux commands')
     common_options.add_argument('--loglevel',
         default= _loglevel_,
         help=''.join(["CRITICAL ERROR WARNING INFO DEBUG NOTSET, default is ",_loglevel_]))
     common_options.add_argument('--rcfile',
-        default= _rcfile_,
-        help="path to ConfigParser compatible ini file")
+        default=None,
+        help="path to ConfigParser compatible ini file",
+        type=lambda x: is_valid_file(argparse_parser, x))
     return common_options
+
 
 def test():
     """ Testing Docstring"""
@@ -351,7 +383,7 @@ if __name__ == '__main__':
     test()
 
 """
-Copyright © 2014, Regents of the University of California
+Copyright © 2016, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
