@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """update nuxeo"""
+from __future__ import unicode_literals
 import sys
 import argparse
 import json
 from pynux import utils
 from pprint import pprint as pp
+from pynux.utils import utf8_arg
 
 
 def main(argv=None):
@@ -16,7 +18,7 @@ def main(argv=None):
     parser.add_argument('file', nargs=1, help="application/json+nxentity")
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--uid', help="update specific nuxeo uid")
-    group.add_argument('--path', help="update specific nuxeo path")
+    group.add_argument('--path', help="update specific nuxeo path", type=utf8_arg)
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()

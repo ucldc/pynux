@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "0.0.0",
+    version = "0.0.2",
     packages = find_packages(),
     install_requires = ['requests'],
     test_suite = 'pynux.tests.test_utils',
@@ -21,7 +21,7 @@ setup(
 )
 
 """
-Copyright © 2014, Regents of the University of California
+Copyright © 2016, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 

@@ -20,9 +20,19 @@ import ConfigParser
 from os.path import expanduser
 import io
 import argparse
+import codecs
+
+UTF8Writer = codecs.getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.0.1'
+_version_ = '0.0.2'
+
+
+def utf8_arg(bytestring):
+    # http://stackoverflow.com/a/23085282
+    return bytestring.decode(sys.getfilesystemencoding())
+
 
 class Nuxeo:
     """utility functions for nuxeo
@@ -123,8 +133,8 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         params.update({'currentPageIndex': current_page_index})
         res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
-        self.logger.debug(res.text)
-        return json.loads(res.text)
+        self.logger.debug(res.content)
+        return json.loads(res.content)
 
     def _get_iter(self, url, params):
         """generator iterator for nuxeo results
@@ -241,7 +251,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def print_document_summary(self, documents):
         for document in documents:
-            print "{0}\t{1}".format(document['uid'], document['path']).encode('utf-8')
+            print '{0}\t{1}'.format(document['uid'], document['path'])
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:
