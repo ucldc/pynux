@@ -20,9 +20,19 @@ import ConfigParser
 from os.path import expanduser
 import io
 import argparse
+import codecs
+
+UTF8Writer = codecs.getwriter('utf8')
+sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.0.1'
+_version_ = '0.0.2'
+
+
+def utf8_arg(bytestring):
+    # http://stackoverflow.com/a/23085282
+    return bytestring.decode(sys.getfilesystemencoding())
+
 
 class Nuxeo:
     """utility functions for nuxeo
@@ -123,8 +133,8 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         params.update({'currentPageIndex': current_page_index})
         res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
-        self.logger.debug(res.text)
-        return json.loads(res.text)
+        self.logger.debug(res.content)
+        return json.loads(res.content)
 
     def _get_iter(self, url, params):
         """generator iterator for nuxeo results
@@ -149,7 +159,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
         :returns: iterator of nuxeo API results
         """
-        url = os.path.join(self.conf["api"], "path/@search")
+        url = u'/'.join([self.conf["api"], "path/@search"])
         params = {
             'pageSize': '100',
             'query': query
@@ -170,8 +180,8 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
         :returns: iterator of nuxeo API results
         """
-        url = os.path.join(self.conf["api"], "path",
-                           path.strip("/"), "@children")
+        url = u'/'.join([self.conf["api"], "path",
+                           path.strip("/"), "@children"])
         params = {}
         self.logger.info(path)
         self.logger.debug(url)
@@ -185,8 +195,8 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: uid
         :rtype: string
         """
-        url = os.path.join(self.conf['api'],  "path",
-                           path.strip("/"))
+        url = u'/'.join([self.conf['api'],  "path",
+                           path.strip("/")])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)['uid']
@@ -204,7 +214,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
             uid = documentid['uid']
-        url = os.path.join(self.conf['api'], "id", uid)
+        url = u'/'.join([self.conf['api'], "id", uid])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)
@@ -224,7 +234,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
             uid = documentid['uid']
-        url = os.path.join(self.conf['api'], "id", uid)
+        url = u'/'.join([self.conf['api'], "id", uid])
         headers = self.document_property_headers
         headers.update({'Content-Type': 'application/json+nxentity'})
 
@@ -241,7 +251,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def print_document_summary(self, documents):
         for document in documents:
-            print "{0}\t{1}".format(document['uid'], document['path']).encode('utf-8')
+            print '{0}\t{1}'.format(document['uid'], document['path'])
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:

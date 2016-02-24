@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from __future__ import unicode_literals
 import sys
 import argparse
 import os
 from pynux import utils
+from pynux.utils import utf8_arg
 
 
 def main(argv=None):
 
     parser = argparse.ArgumentParser(description='nxql via REST API')
-    parser.add_argument('nxql', nargs=1, help="nxql query")
+    parser.add_argument('nxql', nargs=1, help="nxql query", type=utf8_arg)
     parser.add_argument('--outdir', 
-        help="directory to hold application/json+nxentity .json files")
+        help="directory to hold application/json+nxentity .json files",
+        type=utf8_arg)
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
