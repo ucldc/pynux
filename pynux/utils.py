@@ -159,7 +159,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
         :returns: iterator of nuxeo API results
         """
-        url = os.path.join(self.conf["api"], "path/@search")
+        url = u'/'.join([self.conf["api"], "path/@search"])
         params = {
             'pageSize': '100',
             'query': query
@@ -180,8 +180,8 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
         :returns: iterator of nuxeo API results
         """
-        url = os.path.join(self.conf["api"], "path",
-                           path.strip("/"), "@children")
+        url = u'/'.join([self.conf["api"], "path",
+                           path.strip("/"), "@children"])
         params = {}
         self.logger.info(path)
         self.logger.debug(url)
@@ -195,8 +195,8 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: uid
         :rtype: string
         """
-        url = os.path.join(self.conf['api'],  "path",
-                           path.strip("/"))
+        url = u'/'.join([self.conf['api'],  "path",
+                           path.strip("/")])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)['uid']
@@ -214,7 +214,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
             uid = documentid['uid']
-        url = os.path.join(self.conf['api'], "id", uid)
+        url = u'/'.join([self.conf['api'], "id", uid])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.text)
@@ -234,7 +234,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
             uid = documentid['uid']
-        url = os.path.join(self.conf['api'], "id", uid)
+        url = u'/'.join([self.conf['api'], "id", uid])
         headers = self.document_property_headers
         headers.update({'Content-Type': 'application/json+nxentity'})
 
