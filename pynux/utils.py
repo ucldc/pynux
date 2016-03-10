@@ -199,7 +199,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
                            path.strip("/")])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
-        return json.loads(res.text)['uid']
+        return json.loads(res.content)['uid']
 
     def get_metadata(self, **documentid):
         """get metadata for a document
@@ -217,7 +217,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         url = u'/'.join([self.conf['api'], "id", uid])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
-        return json.loads(res.text)
+        return json.loads(res.content)
 
     def update_nuxeo_properties(self, data, **documentid):
         """update nuxeo document properties
@@ -247,7 +247,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
                            auth=self.auth,
                            headers=headers)
         res.raise_for_status()
-        return json.loads(res.text)
+        return json.loads(res.content)
 
     def print_document_summary(self, documents):
         for document in documents:
@@ -279,7 +279,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         url = "{0}/{1}".format(self.conf['fileImporter'], verb)
         res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
         res.raise_for_status()
-        return res.text
+        return res.content
 
     def import_log(self):
         """show small part of file importer log"""
