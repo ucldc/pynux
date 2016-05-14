@@ -15,12 +15,17 @@ def main(argv=None):
     parser.add_argument('--outdir', 
         help="directory to hold application/json+nxentity .json files",
         type=utf8_arg)
+    parser.add_argument('-r', '--recursive', dest='recursive', action='store_true')
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
-    documents = nx.children(argv.path[0])
+
+    if argv.recursive:
+        documents = nx.recursive_children(argv.path[0])
+    else:
+        documents = nx.children(argv.path[0])
 
     if argv.outdir:
         # Expand user- and relative-paths
@@ -35,7 +40,7 @@ if __name__ == "__main__":
     sys.exit(main())
 
 """
-Copyright © 2014, Regents of the University of California
+Copyright © 2016, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

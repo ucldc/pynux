@@ -26,7 +26,11 @@ UTF8Writer = codecs.getwriter('utf8')
 sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.0.2'
+_version_ = '0.0.3'
+
+RECURSIVE_NXQL = """SELECT * FROM Document
+WHERE ecm:parentId = '{}' AND ecm:currentLifeCycleState != 'deleted'
+ORDER BY ecm:pos"""
 
 
 def utf8_arg(bytestring):
@@ -131,7 +135,10 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: json from nuxeo
         """
         params.update({'currentPageIndex': current_page_index})
-        res = requests.get(url, headers=self.document_property_headers, params=params, auth=self.auth)
+        res = requests.get(url,
+                           headers=self.document_property_headers,
+                           params=params,
+                           auth=self.auth)
         res.raise_for_status()
         self.logger.debug(res.content)
         return json.loads(res.content)
@@ -187,6 +194,9 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         self.logger.debug(url)
         return self._get_iter(url, params)
 
+    def recursive_children(self, path):
+        return self.nxql(RECURSIVE_NXQL.format(self.get_uid(path)))
+
     def get_uid(self, path):
         """look up uid from the path
 
@@ -197,7 +207,9 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         """
         url = u'/'.join([self.conf['api'],  "path",
                            path.strip("/")])
-        res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
+        res = requests.get(url,
+                           headers=self.document_property_headers,
+                           auth=self.auth)
         res.raise_for_status()
         return json.loads(res.content)['uid']
 
