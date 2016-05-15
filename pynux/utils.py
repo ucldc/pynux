@@ -28,8 +28,14 @@ sys.stdout = UTF8Writer(sys.stdout)
 _loglevel_ = 'ERROR'
 _version_ = '0.0.3'
 
-RECURSIVE_NXQL = """SELECT * FROM Document
-WHERE ecm:parentId = '{}' AND ecm:currentLifeCycleState != 'deleted'
+RECURSIVE_NXQL_PROJECT_FOLDER = """SELECT *
+FROM Organization
+WHERE ecm:path STARTSWITH '{}' AND ecm:currentLifeCycleState != 'deleted'
+ORDER BY ecm:pos"""
+
+RECURSIVE_NXQL_OBJECT = """SELECT *
+FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio
+WHERE ecm:path STARTSWITH '{}' AND ecm:currentLifeCycleState != 'deleted'
 ORDER BY ecm:pos"""
 
 
@@ -194,8 +200,15 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         self.logger.debug(url)
         return self._get_iter(url, params)
 
-    def recursive_children(self, path):
-        return self.nxql(RECURSIVE_NXQL.format(self.get_uid(path)))
+    def recursive_project_folders(self, path):
+        nxql = RECURSIVE_NXQL_PROJECT_FOLDER.format(path)
+        self.logger.debug(nxql)
+        return self.nxql(nxql)
+
+    def recursive_objects(self, path):
+        nxql = RECURSIVE_NXQL_OBJECT.format(path)
+        self.logger.debug(nxql)
+        return self.nxql(nxql)
 
     def get_uid(self, path):
         """look up uid from the path
@@ -263,7 +276,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def print_document_summary(self, documents):
         for document in documents:
-            print '{0}\t{1}'.format(document['uid'], document['path'])
+            print '\t'.join([document['uid'], document['type'], document['path']])
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:

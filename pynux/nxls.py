@@ -11,11 +11,17 @@ from pynux.utils import utf8_arg
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
-    parser.add_argument('path', nargs=1, help="nuxeo document path", type=utf8_arg)
+    parser.add_argument('path', nargs=1, help='nuxeo document path', type=utf8_arg)
     parser.add_argument('--outdir', 
         help="directory to hold application/json+nxentity .json files",
         type=utf8_arg)
-    parser.add_argument('-r', '--recursive', action='store_true')
+    rstyle = parser.add_mutually_exclusive_group(required=False)
+    rstyle.add_argument('--recursive-folders',
+                        help='recursively list project folders/Organzation',
+                        action='store_true')
+    rstyle.add_argument('--recursive-objects',
+                        help='recursively list objects',
+                        action='store_true')
     show = parser.add_mutually_exclusive_group(required=False)
     show.add_argument('--show-only-uid', action='store_true')
     show.add_argument('--show-only-path', action='store_true')
@@ -25,8 +31,10 @@ def main(argv=None):
 
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
 
-    if argv.recursive:
-        documents = nx.recursive_children(argv.path[0])
+    if argv.recursive_folders:
+        documents = nx.recursive_project_folders(argv.path[0])
+    elif argv.recursive_objects:
+        documents = nx.recursive_objects(argv.path[0])
     else:
         documents = nx.children(argv.path[0])
 
