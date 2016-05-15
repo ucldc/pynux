@@ -15,7 +15,10 @@ def main(argv=None):
     parser.add_argument('--outdir', 
         help="directory to hold application/json+nxentity .json files",
         type=utf8_arg)
-    parser.add_argument('-r', '--recursive', dest='recursive', action='store_true')
+    parser.add_argument('-r', '--recursive', action='store_true')
+    show = parser.add_mutually_exclusive_group(required=False)
+    show.add_argument('--show-only-uid', action='store_true')
+    show.add_argument('--show-only-path', action='store_true')
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
@@ -31,6 +34,12 @@ def main(argv=None):
         # Expand user- and relative-paths
         outdir = os.path.abspath(os.path.expanduser(argv.outdir))
         nx.copy_metadata_to_local(documents, outdir)
+    elif argv.show_only_path == True:
+        for document in documents:
+            print(document['path'])
+    elif argv.show_only_uid == True:
+        for document in documents:
+            print(document['uid'])
     else:
         nx.print_document_summary(documents)
 
