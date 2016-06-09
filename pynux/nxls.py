@@ -11,21 +11,43 @@ from pynux.utils import utf8_arg
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
-    parser.add_argument('path', nargs=1, help="nuxeo document path", type=utf8_arg)
+    parser.add_argument('path', nargs=1, help='nuxeo document path', type=utf8_arg)
     parser.add_argument('--outdir', 
         help="directory to hold application/json+nxentity .json files",
         type=utf8_arg)
+    rstyle = parser.add_mutually_exclusive_group(required=False)
+    rstyle.add_argument('--recursive-folders',
+                        help='recursively list project folders/Organzation',
+                        action='store_true')
+    rstyle.add_argument('--recursive-objects',
+                        help='recursively list objects',
+                        action='store_true')
+    show = parser.add_mutually_exclusive_group(required=False)
+    show.add_argument('--show-only-uid', action='store_true')
+    show.add_argument('--show-only-path', action='store_true')
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
 
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
-    documents = nx.children(argv.path[0])
+
+    if argv.recursive_folders:
+        documents = nx.recursive_project_folders(argv.path[0])
+    elif argv.recursive_objects:
+        documents = nx.recursive_objects(argv.path[0])
+    else:
+        documents = nx.children(argv.path[0])
 
     if argv.outdir:
         # Expand user- and relative-paths
         outdir = os.path.abspath(os.path.expanduser(argv.outdir))
         nx.copy_metadata_to_local(documents, outdir)
+    elif argv.show_only_path == True:
+        for document in documents:
+            print(document['path'])
+    elif argv.show_only_uid == True:
+        for document in documents:
+            print(document['uid'])
     else:
         nx.print_document_summary(documents)
 
@@ -35,7 +57,7 @@ if __name__ == "__main__":
     sys.exit(main())
 
 """
-Copyright © 2014, Regents of the University of California
+Copyright © 2016, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
