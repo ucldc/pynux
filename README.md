@@ -73,11 +73,12 @@ X-Authentication-Token = xxxxxxx
 
 ## Custom Function
 
-```
+```python
 # foo.py
-def nuxeo_mapper(x):
+def nuxeo_mapper(docs, nx):
     for doc in x:
         print(doc)
+        # can use `nx.`... to update the document
 ```
 
 ```

@@ -52,7 +52,7 @@ def main(argv=None):
             print(document['uid'])
     elif argv.show_custom_function:
         mapper = importlib.import_module(argv.show_custom_function)
-        mapper.nuxeo_mapper(documents)
+        mapper.nuxeo_mapper(documents, nx)
     else:
         nx.print_document_summary(documents)
 
