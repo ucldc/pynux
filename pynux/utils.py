@@ -31,7 +31,7 @@ _version_ = '0.0.3'
 RECURSIVE_NXQL_PROJECT_FOLDER = """SELECT *
 FROM Organization
 WHERE ecm:path STARTSWITH '{}' AND ecm:currentLifeCycleState != 'deleted'
-ORDER BY ecm:pos"""
+"""
 
 RECURSIVE_NXQL_OBJECT = """SELECT *
 FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio
