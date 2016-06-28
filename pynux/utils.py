@@ -26,7 +26,7 @@ UTF8Writer = codecs.getwriter('utf8')
 sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.0.3'
+_version_ = '0.0.4'
 
 RECURSIVE_NXQL_PROJECT_FOLDER = """SELECT *
 FROM Organization

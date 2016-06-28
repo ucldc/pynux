@@ -71,6 +71,19 @@ method = token
 X-Authentication-Token = xxxxxxx
 ```
 
+## Custom Function
+
+```
+# foo.py
+def nuxeo_mapper(x):
+    for doc in x:
+        print(doc)
+```
+
+```
+nxls.py / --show-custom-function foo
+```
+
 ## License 
 
 Copyright © 2016, Regents of the University of California
