@@ -5,6 +5,7 @@ import sys
 import argparse
 import os
 import logging
+import importlib
 from pynux import utils
 from pynux.utils import utf8_arg
 
@@ -25,6 +26,7 @@ def main(argv=None):
     show = parser.add_mutually_exclusive_group(required=False)
     show.add_argument('--show-only-uid', action='store_true')
     show.add_argument('--show-only-path', action='store_true')
+    show.add_argument('--show-custom-function')
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
@@ -48,6 +50,9 @@ def main(argv=None):
     elif argv.show_only_uid == True:
         for document in documents:
             print(document['uid'])
+    elif argv.show_custom_function:
+        mapper = importlib.import_module(argv.show_custom_function)
+        mapper.nuxeo_mapper(documents, nx)
     else:
         nx.print_document_summary(documents)
 
