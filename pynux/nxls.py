@@ -6,6 +6,7 @@ import argparse
 import os
 import logging
 import importlib
+import itertools
 from pynux import utils
 from pynux.utils import utf8_arg
 
@@ -38,7 +39,10 @@ def main(argv=None):
     elif argv.recursive_objects:
         documents = nx.recursive_objects(argv.path[0])
     else:
-        documents = nx.children(argv.path[0])
+        documents = itertools.chain(
+            nx.nxql(u'select * from Document where ecm:path="{}"'.format(argv.path[0])),
+            nx.children(argv.path[0])
+        )
 
     if argv.outdir:
         # Expand user- and relative-paths
