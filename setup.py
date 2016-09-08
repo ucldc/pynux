@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "0.0.2",
+    version = "0.0.5",
     packages = find_packages(),
     install_requires = ['requests'],
     test_suite = 'pynux.tests.test_utils',
