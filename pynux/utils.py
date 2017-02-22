@@ -276,7 +276,10 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def print_document_summary(self, documents):
         for document in documents:
-            print '\t'.join([document['uid'], document['type'], document['path']])
+            path = document.get('path')
+            if not path:
+                path = ''
+            print '\t'.join([document['uid'], document['type'], path])
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:
