@@ -14,12 +14,12 @@ from pynux.utils import utf8_arg
 def main(argv=None):
     """main"""
     parser = argparse.ArgumentParser(
-        description='nuxeo metadata via REST API, one record'
-    )
+        description='nuxeo metadata via REST API, one record')
     parser.add_argument('file', nargs=1, help="application/json+nxentity")
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--uid', help="update specific nuxeo uid")
-    group.add_argument('--path', help="update specific nuxeo path", type=utf8_arg)
+    group.add_argument(
+        '--path', help="update specific nuxeo path", type=utf8_arg)
     utils.get_common_options(parser)
     if argv is None:
         argv = parser.parse_args()
@@ -33,9 +33,9 @@ def main(argv=None):
     json_data = open(jfile)
     data = json.load(json_data)
     ret = {}
-    if uid:				# use uid supplied at command line
+    if uid:  # use uid supplied at command line
         ret = nx.update_nuxeo_properties(data, uid=uid)
-    elif path:				# use path supplied at command line
+    elif path:  # use path supplied at command line
         ret = nx.update_nuxeo_properties(data, path=path)
     # if no uid nor path was specified on the command line, then
     # prefer "path": to "uid": when importing files because the file may have
@@ -52,7 +52,6 @@ def main(argv=None):
 # main() idiom for importing into REPL for debugging
 if __name__ == "__main__":
     sys.exit(main())
-
 """
 Copyright © 2014, Regents of the University of California
 All rights reserved.

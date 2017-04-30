@@ -12,29 +12,36 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description='run import of a folder into nuxeo')
     utils.get_common_options(parser)
-    required_flags = parser.add_argument_group('there are four required arguments')
-    required_flags.add_argument('--leaf_type', 
-        help="nuxeo document type for imported leaf nodes", 
+    required_flags = parser.add_argument_group(
+        'there are four required arguments')
+    required_flags.add_argument(
+        '--leaf_type',
+        help="nuxeo document type for imported leaf nodes",
         required=True)
-    required_flags.add_argument('--input_path',
-        help="unix path to files",
+    required_flags.add_argument(
+        '--input_path', help="unix path to files", required=True)
+    required_flags.add_argument(
+        '--target_path',
+        help=
+        "target document for import in nuxeo (parent folder where new folder will be created)",
         required=True)
-    required_flags.add_argument('--target_path', 
-        help="target document for import in nuxeo (parent folder where new folder will be created)",
-        required=True)
-    required_flags.add_argument('--folderish_type',
+    required_flags.add_argument(
+        '--folderish_type',
         help="nuxeo document type for imported folder",
         required=True)
-    parser.add_argument('--no_wait',
+    parser.add_argument(
+        '--no_wait',
         help="don't poll/wait for the job to finish",
         dest="no_wait",
         action="store_false")
-    parser.add_argument('--poll_interval',
+    parser.add_argument(
+        '--poll_interval',
         help="seconds to sleep for if waiting",
         dest="sleep",
         default=20,
         type=int)
-    parser.add_argument('--skip_root_folder_creation',
+    parser.add_argument(
+        '--skip_root_folder_creation',
         help="don't create root folder on import",
         dest="skip_root_folder_creation",
         action="store_true")
@@ -42,7 +49,8 @@ def main(argv=None):
         argv = parser.parse_args()
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
     print(nx.import_log_activate())
-    print(nx.import_one_folder(argv.leaf_type,
+    print(nx.import_one_folder(
+        argv.leaf_type,
         argv.input_path,
         argv.target_path,
         argv.folderish_type,
@@ -56,7 +64,6 @@ def main(argv=None):
 # main() idiom for importing into REPL for debugging
 if __name__ == "__main__":
     sys.exit(main())
-
 """
 Copyright © 2014, Regents of the University of California
 All rights reserved.
