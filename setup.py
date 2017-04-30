@@ -2,9 +2,11 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "0.0.5",
+    version = "0.1.0",
     packages = find_packages(),
-    install_requires = ['requests'],
+    install_requires = [
+        'requests', 'configparser', 'future'
+    ],
     test_suite = 'pynux.tests.test_utils',
     tests_require = ['httpretty'],
     entry_points={
@@ -21,7 +23,7 @@ setup(
 )
 
 """
-Copyright © 2016, Regents of the University of California
+Copyright © 2017, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 

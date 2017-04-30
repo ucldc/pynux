@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from __future__ import print_function
 import sys
 import argparse
 import os
@@ -66,7 +67,7 @@ if __name__ == "__main__":
     sys.exit(main())
 
 """
-Copyright © 2016, Regents of the University of California
+Copyright © 2017, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

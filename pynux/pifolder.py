@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import sys
 import argparse
 from pynux import utils
@@ -40,16 +41,16 @@ def main(argv=None):
     if argv is None:
         argv = parser.parse_args()
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
-    print nx.import_log_activate()
-    print nx.import_one_folder(argv.leaf_type,
+    print(nx.import_log_activate())
+    print(nx.import_one_folder(argv.leaf_type,
         argv.input_path,
         argv.target_path,
         argv.folderish_type,
         wait=argv.no_wait,
         sleep=argv.sleep,
-        skip_root_folder_creation=argv.skip_root_folder_creation)
-    print nx.call_file_importer_api('status')
-    print nx.import_log()
+        skip_root_folder_creation=argv.skip_root_folder_creation))
+    print(nx.call_file_importer_api('status'))
+    print(nx.import_log())
 
 
 # main() idiom for importing into REPL for debugging

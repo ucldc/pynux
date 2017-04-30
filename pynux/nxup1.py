@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """update nuxeo"""
 from __future__ import unicode_literals
+from __future__ import print_function
 import sys
 import argparse
 import json
@@ -43,7 +44,7 @@ def main(argv=None):
         uid = nx.get_uid(data.get('path')) or data.get('uid')
         ret = nx.update_nuxeo_properties(data, uid=uid)
     if not ret:
-        print "no uid found, specify --uid or --path"
+        print("no uid found, specify --uid or --path")
         exit(1)
     pp(ret)
 

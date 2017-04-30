@@ -9,6 +9,11 @@ python function library for working with nuxeo "REST" APIs.
 
 """
 from __future__ import unicode_literals
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import bytes
+from builtins import object
 import requests
 import json
 import sys
@@ -16,17 +21,22 @@ import os
 import time
 import itertools
 import logging
-import ConfigParser
+import configparser
 from os.path import expanduser
 import io
 import argparse
 import codecs
 
+# set the output to utf8 in py2 or py3
 UTF8Writer = codecs.getwriter('utf8')
-sys.stdout = UTF8Writer(sys.stdout)
+try:
+    # http://stackoverflow.com/a/4374457/1763984
+    sys.stdout = UTF8Writer(sys.stdout.detach())
+except AttributeError as e:
+    sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.0.5'
+_version_ = '0.1.0'
 
 RECURSIVE_NXQL_PROJECT_FOLDER = """SELECT *
 FROM Organization
@@ -40,11 +50,16 @@ ORDER BY ecm:pos"""
 
 
 def utf8_arg(bytestring):
-    # http://stackoverflow.com/a/23085282
-    return bytestring.decode(sys.getfilesystemencoding())
+    try:
+        # fix up command line argument for python 2
+        # http://stackoverflow.com/a/23085282
+        return bytestring.decode(sys.getfilesystemencoding())
+    except AttributeError as e:
+        # command line arguments already decoded in python 3
+        return bytestring
 
 
-class Nuxeo:
+class Nuxeo(object):
     """utility functions for nuxeo
 
     Object's data keeps track of URLs and credentials
@@ -68,12 +83,12 @@ X-NXDocumentProperties = dublincore
 [platform_importer]
 base = http://localhost:8080/nuxeo/site/fileImporter
 """
-        config = ConfigParser.SafeConfigParser()
+        config = configparser.ConfigParser()
         # first level of defaults hardcoded above
-        config.readfp(io.BytesIO(bytes(defaultrc)))
+        config.read_string(defaultrc)
         # then, check for an rcfile supplied by the caller
         if rcfile:
-            config.readfp(rcfile)
+            config.read_file(rcfile)
         # otherwise, check a default path in user directory
         elif not(rcfile) and os.path.isfile(expanduser('~/.pynuxrc')):
             config.read(expanduser('~/.pynuxrc'))
@@ -147,7 +162,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
                            auth=self.auth)
         res.raise_for_status()
         self.logger.debug(res.content)
-        return json.loads(res.content)
+        return json.loads(res.content.decode('utf-8'))
 
     def _get_iter(self, url, params):
         """generator iterator for nuxeo results
@@ -224,7 +239,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
                            headers=self.document_property_headers,
                            auth=self.auth)
         res.raise_for_status()
-        return json.loads(res.content)['uid']
+        return json.loads(res.content.decode('utf-8'))['uid']
 
     def get_metadata(self, **documentid):
         """get metadata for a document
@@ -242,7 +257,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         url = u'/'.join([self.conf['api'], "id", uid])
         res = requests.get(url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
-        return json.loads(res.content)
+        return json.loads(res.content.decode('utf-8'))
 
     def update_nuxeo_properties(self, data, **documentid):
         """update nuxeo document properties
@@ -280,7 +295,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             path = document.get('path')
             if not path:
                 path = ''
-            print '\t'.join([document['uid'], document['type'], path])
+            print('\t'.join([document['uid'], document['type'], path]))
 
     def copy_metadata_to_local(self, documents, local):
         for document in documents:
@@ -312,11 +327,11 @@ base = http://localhost:8080/nuxeo/site/fileImporter
 
     def import_log(self):
         """show small part of file importer log"""
-        print self.call_file_importer_api("log")
+        print(self.call_file_importer_api("log"))
 
     def import_log_activate(self):
         """activate file importer log"""
-        print self.call_file_importer_api("logActivate")
+        print(self.call_file_importer_api("logActivate"))
 
     def import_one_folder(self,
                           leaf_type, input_path, target_path, folderish_type,
@@ -343,7 +358,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         }
         # only one import can run at a time
         self.import_status_wait(wait=wait, sleep=sleep)
-        print self.call_file_importer_api("run", params)
+        print(self.call_file_importer_api("run", params))
         # an import should now be running
         self.import_status_wait(wait=wait, sleep=sleep)
         return
@@ -422,7 +437,7 @@ if __name__ == '__main__':
     test()
 
 """
-Copyright © 2016, Regents of the University of California
+Copyright © 2017, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
