@@ -266,6 +266,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         # copy what we want from the input json into the payload
         payload = {}
         payload['uid'] = uid
+        payload['entity-type'] = data.get('entity-type', 'document')
         payload['properties'] = data['properties']
         res = requests.put(url,
                            data=json.dumps(payload),
