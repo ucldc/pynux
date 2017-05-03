@@ -10,7 +10,8 @@ from pynux.utils import utf8_arg
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='nuxeo metadata via REST API')
-    parser.add_argument('--outdir',
+    parser.add_argument(
+        '--outdir',
         help="directory to hold application/json+nxentity .json files",
         type=utf8_arg)
     utils.get_common_options(parser)
@@ -30,11 +31,9 @@ def main(argv=None):
         nx.print_document_summary(documents)
 
 
-
 # main() idiom for importing into REPL for debugging
 if __name__ == "__main__":
     sys.exit(main())
-
 """
 Copyright © 2014, Regents of the University of California
 All rights reserved.

@@ -1,3 +1,4 @@
+from builtins import bytes
 import httpretty
 from pynux import utils
 import json
@@ -37,7 +38,7 @@ class TestNuxeoREST(unittest.TestCase):
             body=request_callback,
         )
         assert(self.nx.all())
-        assert(self.nx.all().next())
+        assert(next(self.nx.all()))
         assert(self.nx.children("asset-library"))
         assert(self.nx.get_metadata(uid= self.nx.get_uid("asset-library")))
         assert(self.nx.get_metadata(path="asset-library"))
