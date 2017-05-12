@@ -22,6 +22,7 @@ import logging
 import configparser
 from os.path import expanduser
 import codecs
+import urllib.parse
 
 # set the output to utf8 in py2 or py3
 UTF8Writer = codecs.getwriter('utf8')
@@ -32,7 +33,7 @@ except AttributeError as e:
     sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.1.0'
+_version_ = '0.1.1'
 
 RECURSIVE_NXQL_PROJECT_FOLDER = """SELECT *
 FROM Organization
@@ -53,6 +54,10 @@ def utf8_arg(bytestring):
     except AttributeError:
         # command line arguments already decoded in python 3
         return bytestring
+
+
+def escape_path(path):
+    return urllib.parse.quote(path, safe=' /')
 
 
 class Nuxeo(object):
@@ -212,19 +217,19 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: iterator of nuxeo API results
         """
         url = u'/'.join(
-            [self.conf["api"], "path", path.strip("/"), "@children"])
+            [self.conf["api"], "path", escape_path(path).strip('/'), "@children"])
         params = {}
         self.logger.info(path)
         self.logger.debug(url)
         return self._get_iter(url, params)
 
     def recursive_project_folders(self, path):
-        nxql = RECURSIVE_NXQL_PROJECT_FOLDER.format(path)
+        nxql = RECURSIVE_NXQL_PROJECT_FOLDER.format(escape_path(path))
         self.logger.debug(nxql)
         return self.nxql(nxql)
 
     def recursive_objects(self, path):
-        nxql = RECURSIVE_NXQL_OBJECT.format(path)
+        nxql = RECURSIVE_NXQL_OBJECT.format(escape_path(path))
         self.logger.debug(nxql)
         return self.nxql(nxql)
 
@@ -236,7 +241,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: uid
         :rtype: string
         """
-        url = u'/'.join([self.conf['api'], "path", path.strip("/")])
+        url = u'/'.join([self.conf['api'], "path", escape_path(path)])
         res = requests.get(
             url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
@@ -252,7 +257,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         if len(documentid) != 1:
             raise TypeError("either uid or path")
         if 'path' in documentid:
-            uid = self.get_uid(documentid['path'])
+            uid = self.get_uid(escape_path(documentid['path']))
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
@@ -273,7 +278,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         if len(documentid) != 1:
             raise TypeError("either uid or path")
         if 'path' in documentid:
-            uid = self.get_uid(documentid['path'])
+            uid = self.get_uid(escape_path(documentid['path']))
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
