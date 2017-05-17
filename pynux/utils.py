@@ -241,7 +241,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         :returns: uid
         :rtype: string
         """
-        url = u'/'.join([self.conf['api'], "path", escape_path(path)])
+        url = u'/'.join([self.conf['api'], "path", escape_path(path).strip('/')])
         res = requests.get(
             url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
