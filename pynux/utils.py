@@ -257,7 +257,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         if len(documentid) != 1:
             raise TypeError("either uid or path")
         if 'path' in documentid:
-            uid = self.get_uid(escape_path(documentid['path']))
+            uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
@@ -278,7 +278,7 @@ base = http://localhost:8080/nuxeo/site/fileImporter
         if len(documentid) != 1:
             raise TypeError("either uid or path")
         if 'path' in documentid:
-            uid = self.get_uid(escape_path(documentid['path']))
+            uid = self.get_uid(documentid['path'])
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
