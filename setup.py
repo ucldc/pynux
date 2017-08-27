@@ -15,9 +15,6 @@ setup(
             'nxup1 = pynux.nxup1:main',
             'nxls = pynux.nxls:main',
             'nxql_all = pynux.nxql_all:main',
-            'pilog = pynux.pilog:main',
-            'pistatus = pynux.pistatus:main',
-            'pifolder = pynux.pifolder:main',
         ]
     }
 )

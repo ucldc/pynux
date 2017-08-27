@@ -66,7 +66,7 @@ class Nuxeo(object):
     Object's data keeps track of URLs and credentials
     for Nuxeo REST API and Nuxeo Platoform Importer / bulk import API
 
-    :param conf: dictionary with ``"user":``, ``"password":``, ``"api":`` ``"fileImporter":`` and/or ``"X-NXDocumentProperties":`` to override defaults
+    :param conf: dictionary with ``"user":``, ``"password":``, ``"api":``,  and/or ``"X-NXDocumentProperties":`` to override defaults
     :param rcfile: `ConfigParser`
     :param loglevel: for standard library `logging`
     """
@@ -81,9 +81,6 @@ password = Administrator
 [rest_api]
 base = http://localhost:8080/nuxeo/site/api/v1
 X-NXDocumentProperties = dublincore
-
-[platform_importer]
-base = http://localhost:8080/nuxeo/site/fileImporter
 """
         config = configparser.ConfigParser()
         # first level of defaults hardcoded above
@@ -115,8 +112,6 @@ base = http://localhost:8080/nuxeo/site/fileImporter
             config.get('rest_api', 'base'),
             "X-NXDocumentProperties":
             config.get('rest_api', 'X-NXDocumentProperties'),
-            "fileImporter":
-            config.get('platform_importer', 'base'),
             "X-Authentication-Token":
             token,
         }
@@ -322,80 +317,6 @@ base = http://localhost:8080/nuxeo/site/fileImporter
                         indent=4,
                         separators=(',', ': ')))
 
-    # platform importer api functions
-    # uses NUXEO_FILEIMPORTER_API in self.conf['fileImporter']
-
-    def call_file_importer_api(self, verb, params={}):
-        """generic wrapper to make GET calls to this API"""
-        url = "{0}/{1}".format(self.conf['fileImporter'], verb)
-        res = requests.get(
-            url,
-            headers=self.document_property_headers,
-            params=params,
-            auth=self.auth)
-        res.raise_for_status()
-        return res.content
-
-    def import_log(self):
-        """show small part of file importer log"""
-        print(self.call_file_importer_api("log"))
-
-    def import_log_activate(self):
-        """activate file importer log"""
-        print(self.call_file_importer_api("logActivate"))
-
-    def import_one_folder(self,
-                          leaf_type,
-                          input_path,
-                          target_path,
-                          folderish_type,
-                          wait=True,
-                          sleep=20,
-                          skip_root_folder_creation=False):
-        """trigger an import and wait for it to finish
-
-        :param leaf_type: nuxeo document type for imported files
-        :param input_path: path on local file system
-        :param target_path: parent path in Nuxeo
-        :param folderish_type: nuxeo document type of new folder
-        :param wait: boolean (True to poll)
-        :param sleep: float (how long to sleep during poll)
-        :param skip_root_folder_creation: boolean (True to skip root folder creation)
-        :returns: STDOUT
-        """
-        if not leaf_type and input_path and target_path and folderish_type:
-            raise TypeError("missing required value")
-        params = {
-            "leafType": leaf_type,
-            "inputPath": input_path,
-            "targetPath": target_path,
-            "folderishType": folderish_type,
-            "skipRootContainerCreation": skip_root_folder_creation,
-        }
-        # only one import can run at a time
-        self.import_status_wait(wait=wait, sleep=sleep)
-        print(self.call_file_importer_api("run", params))
-        # an import should now be running
-        self.import_status_wait(wait=wait, sleep=sleep)
-        return
-
-    def import_status_wait(self, wait=True, sleep=20):
-        """check import status and wait for Not Running"""
-        if not wait:  # for the impatient
-            return True
-        # poll the api to and wait for the run to finish...
-        url = "{0}/{1}".format(self.conf['fileImporter'], "status")
-        res = requests.get(
-            url, headers=self.document_property_headers, auth=self.auth)
-        res.raise_for_status()
-        # http://programmers.stackexchange.com/a/215261/124939
-        while res.text != 'Not Running':
-            sys.stdout.write('.')
-            sys.stdout.flush()
-            time.sleep(sleep)
-            res = requests.get(
-                url, headers=self.document_property_headers, auth=self.auth)
-            res.raise_for_status()
 
     ## utility functions
     #  generic snippts not customzied to this project

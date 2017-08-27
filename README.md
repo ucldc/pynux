@@ -59,9 +59,6 @@ base = http://localhost:8080/nuxeo/site/api/v1
 X-NXDocumentProperties = dublincore
 # for developers on the UCLDC project; use
 # X-NXDocumentProperties = dublincore,ucldc_schema,picture
-
-[platform_importer]
-base = http://localhost:8080/nuxeo/site/fileImporter
 ```
 
 alternative authentication
