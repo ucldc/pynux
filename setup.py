@@ -2,10 +2,10 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "0.1.3",
+    version = "1.0.0",
     packages = find_packages(),
     install_requires = [
-        'requests', 'configparser', 'future'
+        'requests', 'configparser', 'future', 'EZID'
     ],
     test_suite = 'pynux.tests.test_utils',
     tests_require = ['httpretty'],
@@ -14,6 +14,7 @@ setup(
             'nxql = pynux.nxql:main',
             'nxup1 = pynux.nxup1:main',
             'nxls = pynux.nxls:main',
+            'nxid = pynux.nxid:main',
             'nxql_all = pynux.nxql_all:main',
         ]
     }

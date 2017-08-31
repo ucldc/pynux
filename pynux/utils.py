@@ -33,7 +33,7 @@ except AttributeError as e:
     sys.stdout = UTF8Writer(sys.stdout)
 
 _loglevel_ = 'ERROR'
-_version_ = '0.1.1'
+_version_ = '1.0.0'
 
 RECURSIVE_NXQL_PROJECT_FOLDER = """SELECT *
 FROM Organization
@@ -103,22 +103,34 @@ X-NXDocumentProperties = dublincore
         # these are the defaults from the config
         defaults = {
             "auth_method":
-            'token' if token_auth else 'basic',
+                'token' if token_auth else 'basic',
             "user":
-            config.get('nuxeo_account', 'user'),
+                config.get('nuxeo_account', 'user'),
             "password":
-            config.get('nuxeo_account', 'password'),
+                config.get('nuxeo_account', 'password'),
             "api":
-            config.get('rest_api', 'base'),
+                config.get('rest_api', 'base'),
             "X-NXDocumentProperties":
-            config.get('rest_api', 'X-NXDocumentProperties'),
+                config.get('rest_api', 'X-NXDocumentProperties'),
             "X-Authentication-Token":
-            token,
+                token,
         }
         self.conf = {}
         self.conf.update(defaults)
         # override the defaults based on conf pased in by caller
         self.conf.update(conf)
+
+        if config.has_section('ezid'):
+            self.ezid_conf = {
+                "host":
+                    config.get('ezid', 'host'),
+                "username":
+                    config.get('ezid', 'username'),
+                "password":
+                    config.get('ezid', 'password'),
+                "shoulder":
+                    config.get('ezid', 'shoulder'),
+            }
 
         # auth and headers for the request object
         self.document_property_headers = {
