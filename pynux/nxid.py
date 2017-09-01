@@ -19,42 +19,47 @@ ARK_RE = re.compile('(ark:/\d{5}\/[^/|\s]*)')
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description='')
+    parser = argparse.ArgumentParser(
+        description='nxid finds top level objects in Nuxeo and syncs them up with EZID')
+
     parser.add_argument(
-        'path', nargs=1, help='nuxeo document path', type=utf8_arg)
+        'path', nargs=1, help='nuxeo path (folder or object)', type=utf8_arg)
 
-    ezid_group = parser.add_argument_group('minting behaviour')
-
+    ezid_group = parser.add_argument_group('minting behaviour flags')
+    ezid_group.add_argument(
+        '--mint', '-m',
+        action='store_true',
+        help='when an ARK is missing, mint and bind new ARK in EZID')
+    ezid_group.add_argument(
+        '--create', '-c',
+        action='store_true',
+        help='when an ARK is found in Nuxeo but not EZID, create EZID')
+    ezid_group.add_argument(
+        '--update', '-u',
+        action='store_true',
+        help='when an ARK is found in Nuxeo and EZID, update EZID')
     ezid_group.add_argument(
         '--no-noop-report',
         action='store_true',
         help='override default behaviour of reporting on noops')
     ezid_group.add_argument(
-        '--mint',
+        '--show-erc',
         action='store_true',
-        help='when an ARK is missing, mint and bind new ARK in EZID')
-    ezid_group.add_argument(
-        '--create',
-        action='store_true',
-        help='when an ARK is found in Nuxeo but not EZID, create EZID')
-    ezid_group.add_argument(
-        '--update',
-        action='store_true',
-        help='when an ARK is found in Nuxeo and EZID, update EZID')
+        help='show ANVL record that will be sent to EZID')
 
-    conf_group = parser.add_argument_group('EZID configuration')
-
+    conf_group = parser.add_argument_group('EZID configuration and metadata')
     conf_group.add_argument(
-        '--shoulder', help='alternative shoulder to the one in the rcfile')
-
+        '--ezid-username', help='username for EZID API (overrides rcfile)')
+    conf_group.add_argument(
+        '--ezid-password', help='password for EZID API (overrides rc file)')
+    conf_group.add_argument(
+        '--shoulder', help='shoulder (overrides rcfile)')
     conf_group.add_argument(
         '--owner', help='set as _owner for EZID')
-
     conf_group.add_argument(
-        '--ezid-username', help='username for EZID API')
-
+        '--status', help='set as _status for EZID (public|reserved|unavailable)')
     conf_group.add_argument(
-        '--ezid-password', help='password for EZID API')
+        '--publisher', help='set as dc.publisher for EZID')
 
     utils.get_common_options(parser)
     if argv is None:
@@ -64,8 +69,8 @@ def main(argv=None):
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
 
     # read config out of .pynuxrc file
-    username = nx.ezid_conf['username']
-    password = nx.ezid_conf['password']
+    username = argv.ezid_username or nx.ezid_conf['username']
+    password = argv.ezid_password or nx.ezid_conf['password']
     shoulder = argv.shoulder or nx.ezid_conf['shoulder']
     ezid = EZID.EZIDClient(credentials=dict(username=username, password=password))
 
@@ -97,33 +102,42 @@ AND ecm:pos is NULL'''.format(argv.path[0]))
         if ark is not None:
             ezid_status = check_ezid(ark, ezid)
 
+        ezdata = item_erc_dict(
+            item,
+            owner=argv.owner,            # _owner
+            status=argv.status,          # _status
+            publisher=argv.publisher,    # dc.publisher
+        )
+
+        if argv.show_erc:
+            print(EZID.formatAnvlFromDict(ezdata))
+            print('')
+
         # mint
         if not(ark) and not(ezid_status):
             if argv.mint:
-                print(EZID.formatAnvlFromDict(item_erc_dict(item, argv.owner)))
-                new_ark = ezid.mint(shoulder, item_erc_dict(item, argv.owner))
+                new_ark = ezid.mint(shoulder, ezdata)
                 update_nuxeo(item, nx, new_ark)
-                print('✓ minted "{}" {}'.format(path, new_ark))
+                print('✓ mint "{}" {}'.format(path, new_ark))
             elif report:
-                print('ℹ mint "{}"'.format(path))
+                print('ℹ noop mint "{}"'.format(path))
 
         # create
         if ark and not(ezid_status):
             if argv.create:
-                # ezid.create()
-                print('going to create')
+                ezid.create(ark, ezdata)
+                print('✓ create "{}" {}'.format(path, ark))
             elif report:
-                print('ℹ create "{}" {}'.format(path, ark))
+                print('ℹ noop create "{}" {}'.format(path, ark))
 
         # update
         if ark and ezid_status:
             owner = get_owner(ezid_status)
             if argv.update:
-                # ezid.update()
-                print('going to update')
+                ezid.update(ark, ezdata)
+                print('✓ update "{}" {}'.format(path, ark))
             elif report:
-                print('ℹ update "{}" {} {}'.format(path, ark, owner))
-
+                print('ℹ noop update "{}" {} {}'.format(path, ark, owner))
 
 
 def get_owner(erc):
@@ -146,6 +160,7 @@ def check_ezid(ark, ezid):
 
     sys.stdout = sys.__stdout__
     return ret
+
 
 def find_ark(s):
     ''' fish an ARK from the identifier in Nuxeo, return the ARK or `None`'''
@@ -174,12 +189,16 @@ def update_nuxeo(item, nx, ark):
     nx.update_nuxeo_properties(update_doc, uid=item['uid'])
 
 
-def item_erc_dict(item, owner):
-    ''' create erc dict for item, don't set the target untill it is published '''
+def item_erc_dict(item, owner=None, status=None, publisher=None):
+    ''' create erc dict for item '''
     # metadata mapping from nuxeo to ERC
     p = item['properties']
     title = p.get('dc:title', '(:unav)')
+    if title is None:
+        title = '(:unav)'
     type_ = p.get('dc:type', '(:unav)')
+    if type_ is None:
+        type_ = '(:unav)'
     # repeating creator
     creator_list = p.get('ucldc_schema:creator')
     if creator_list:
@@ -197,12 +216,15 @@ def item_erc_dict(item, owner):
         '_profile': 'dc',
         'dc.title': title,
         'dc.creator': creator,
-        'dc.publisher': '',
         'dc.type': type_,
     }
 
     if owner:
         ezdata.update({'_owner': owner})
+    if status:
+        ezdata.update({'_status': status})
+    if publisher:
+        ezdata.update({'dc.publisher': publisher})
 
     return ezdata
 
