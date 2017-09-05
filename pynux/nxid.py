@@ -49,17 +49,17 @@ def main(argv=None):
 
     conf_group = parser.add_argument_group('EZID configuration and metadata')
     conf_group.add_argument(
-        '--ezid-username', help='username for EZID API (overrides rcfile)')
+        '--ezid-username', help='username for EZID API (overrides rcfile)', type=utf8_arg)
     conf_group.add_argument(
-        '--ezid-password', help='password for EZID API (overrides rc file)')
+        '--ezid-password', help='password for EZID API (overrides rc file)', type=utf8_arg)
     conf_group.add_argument(
-        '--shoulder', help='shoulder (overrides rcfile)')
+        '--shoulder', help='shoulder (overrides rcfile)', type=utf8_arg)
     conf_group.add_argument(
-        '--owner', help='set as _owner for EZID')
+        '--owner', help='set as _owner for EZID', type=utf8_arg)
     conf_group.add_argument(
-        '--status', help='set as _status for EZID (public|reserved|unavailable)')
+        '--status', help='set as _status for EZID (public|reserved|unavailable)', type=utf8_arg)
     conf_group.add_argument(
-        '--publisher', help='set as dc.publisher for EZID')
+        '--publisher', help='set as dc.publisher for EZID', type=utf8_arg)
 
     utils.get_common_options(parser)
     if argv is None:
@@ -141,7 +141,7 @@ AND ecm:pos is NULL'''.format(argv.path[0]))
 
 
 def get_owner(erc):
-    delim = '_owner:'
+    delim = str('_owner:')
     s = StringIO.StringIO(erc)
     for line in s:
        if line.startswith(delim):
@@ -153,13 +153,11 @@ def check_ezid(ark, ezid):
     ''' check to see if the ARK is listed in EZID, returns raw ERC or `None`'''
     try:
         sys.stdout = open(os.devnull, 'w')
-        ret = ezid.view(ark)
+        return ezid.view(ark)
     except HTTPError:
-        sys.stdout = sys.__stdout__
         return None
-
-    sys.stdout = sys.__stdout__
-    return ret
+    finally:
+        sys.stdout = sys.__stdout__
 
 
 def find_ark(s):
