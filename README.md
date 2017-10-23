@@ -26,7 +26,7 @@ python setup.py test
 
 ## Requirements
 
-### [Nuxeo Platform 5.8 with DAM module](http://www.nuxeo.com/)
+### [Nuxeo](http://www.nuxeo.com/)
 
 ### REST API
 
@@ -35,11 +35,6 @@ python setup.py test
  * `nuxeoctl mp-install nuxeo-rest-api`
  * [api viewer](http://doc.nuxeo.com/display/public/NXDOC/Resources+Endpoints)
 
-### Bulk document importer
-
- * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/ADMINDOC/Bulk+Document+Importer) 
- * [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-platform-importer)
- * `nuxeoctl mp-install nuxeo-platform-importer`
 
 ## Configuration
 
@@ -90,7 +85,7 @@ nxls.py / --show-custom-function foo
 
 ## License 
 
-Copyright © 2016, Regents of the University of California
+Copyright © 2017, Regents of the University of California
 
 All rights reserved.
 
