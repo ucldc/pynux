@@ -55,6 +55,11 @@ X-NXDocumentProperties = dublincore
 # for developers on the UCLDC project; use
 # X-NXDocumentProperties = dublincore,ucldc_schema,picture
 
+[ezid]
+host = https://ezid.cdlib.org/
+username = 
+password = 
+shoulder = ark:/99999/fk4
 ```
 
 alternative authentication

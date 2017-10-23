@@ -13,7 +13,6 @@ class TestNuxeoREST(unittest.TestCase):
     def setUp(self):
         self.nx = utils.Nuxeo({
             'api': 'http://mockme/r',
-            'fileImporter': 'http://mockme/f',
         }, rcfile=io.BytesIO(bytes()))
 
     @httpretty.activate
