@@ -60,6 +60,8 @@ def main(argv=None):
         '--status', help='set as _status for EZID (public|reserved|unavailable)', type=utf8_arg)
     conf_group.add_argument(
         '--publisher', help='set as dc.publisher for EZID', type=utf8_arg)
+    conf_group.add_argument(
+        '--location', help='set location URL prefix for EZID', type=utf8_arg)
 
     utils.get_common_options(parser)
     if argv is None:
@@ -107,6 +109,7 @@ AND ecm:pos is NULL'''.format(argv.path[0]))
             owner=argv.owner,            # _owner
             status=argv.status,          # _status
             publisher=argv.publisher,    # dc.publisher
+            location=argv.location       # _target
         )
 
         if argv.show_erc:
@@ -187,7 +190,7 @@ def update_nuxeo(item, nx, ark):
     nx.update_nuxeo_properties(update_doc, uid=item['uid'])
 
 
-def item_erc_dict(item, owner=None, status=None, publisher=None):
+def item_erc_dict(item, owner=None, status=None, publisher=None, location=None):
     ''' create erc dict for item '''
     # metadata mapping from nuxeo to ERC
     p = item['properties']
@@ -209,6 +212,8 @@ def item_erc_dict(item, owner=None, status=None, publisher=None):
         date = date_list[0].get('date')
     else:
         date = '(:unav)'
+    #set identifier variable again for use in setting _target
+    identifier = p.get('ucldc_schema:identifier')
 
     ezdata = {
         '_profile': 'dc',
@@ -223,6 +228,8 @@ def item_erc_dict(item, owner=None, status=None, publisher=None):
         ezdata.update({'_status': status})
     if publisher:
         ezdata.update({'dc.publisher': publisher})
+    if location:
+    	ezdata.update({'_target': location + identifier})
 
     return ezdata
 
