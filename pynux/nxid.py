@@ -220,6 +220,7 @@ def item_erc_dict(item, owner=None, status=None, publisher=None, location=None):
         'dc.title': title,
         'dc.creator': creator,
         'dc.type': type_,
+        'dc.date': date,
     }
 
     if owner:
