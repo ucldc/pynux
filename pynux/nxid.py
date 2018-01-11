@@ -197,7 +197,7 @@ def item_erc_dict(item, owner=None, status=None, publisher=None, location=None):
     title = p.get('dc:title', '(:unav)')
     if title is None:
         title = '(:unav)'
-    type_ = p.get('dc:type', '(:unav)')
+    type_ = p.get('ucldc_schema:type', '(:unav)')
     if type_ is None:
         type_ = '(:unav)'
     # repeating creator
