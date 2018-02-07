@@ -203,7 +203,7 @@ def item_erc_dict(item, owner=None, status=None, publisher=None, location=None):
     # repeating creator
     creator_list = p.get('ucldc_schema:creator')
     if creator_list:
-        creator = '; '.join(list(str(c.get('name')) for c in creator_list))
+        creator = '; '.join(list(unicode(c.get('name')) for c in creator_list))
     else:
         creator = '(:unav)'
     # just take the first date
