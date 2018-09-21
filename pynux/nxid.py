@@ -213,7 +213,7 @@ def item_erc_dict(item, owner=None, status=None, publisher=None, location=None):
     else:
         date = '(:unav)'
     #set identifier variable again for use in setting _target
-    identifier = p.get('ucldc_schema:identifier')
+    identifier = p.get('ucldc_schema:identifier', '')
 
     ezdata = {
         '_profile': 'dc',
