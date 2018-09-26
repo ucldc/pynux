@@ -8,7 +8,7 @@ setup(
         'requests', 'configparser', 'future', 'EZID'
     ],
     test_suite = 'pynux.tests.test_utils',
-    tests_require = ['httpretty'],
+    tests_require = ['httpretty==0.8.14'],
     entry_points={
         'console_scripts': [
             'nxql = pynux.nxql:main',
