@@ -2,13 +2,13 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "1.0.2",
+    version = "1.0.3",
     packages = find_packages(),
     install_requires = [
         'requests', 'configparser', 'future', 'EZID'
     ],
     test_suite = 'pynux.tests.test_utils',
-    tests_require = ['httpretty'],
+    tests_require = ['httpretty==0.8.14'],
     entry_points={
         'console_scripts': [
             'nxql = pynux.nxql:main',
