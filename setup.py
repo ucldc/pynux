@@ -9,7 +9,7 @@ setup(
     ],
     dependency_links=['https://github.com/ucldc/ezid/archive/v0.4.2.tar.gz#egg=EZID-0.4.2'],
     test_suite = 'pynux.tests.test_utils',
-    tests_require = ['httpretty==0.8.14'],
+    tests_require = ['httpretty'],
     entry_points={
         'console_scripts': [
             'nxql = pynux.nxql:main',
