@@ -5,9 +5,9 @@ setup(
     version = "1.0.4",
     packages = find_packages(),
     install_requires = [
-        'requests', 'configparser', 'future', 'EZID==0.4.1'
+        'requests', 'configparser', 'future', 'EZID==0.4.2'
     ],
-    dependency_links=['https://bitbucket.org/mredar/ezid/get/bbda80a8f1a9.zip#egg=EZID-0.4.1'],
+    dependency_links=['https://github.com/ucldc/ezid/archive/v0.4.2.tar.gz#egg=EZID-0.4.2'],
     test_suite = 'pynux.tests.test_utils',
     tests_require = ['httpretty==0.8.14'],
     entry_points={
