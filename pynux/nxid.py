@@ -6,8 +6,16 @@ import sys
 import argparse
 import os
 import re
-import StringIO
-from urllib2 import HTTPError
+try:
+    from StringIO import StringIO ## for Python 2
+except ImportError:
+    from io import StringIO ## for Python 3
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
 import EZID
 from pynux import utils
 from pynux.utils import utf8_arg
@@ -145,7 +153,7 @@ AND ecm:pos is NULL'''.format(argv.path[0]))
 
 def get_owner(erc):
     delim = str('_owner:')
-    s = StringIO.StringIO(erc)
+    s = StringIO(erc)
     for line in s:
        if line.startswith(delim):
            return line.partition(delim)[2].strip()

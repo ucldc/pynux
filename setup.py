@@ -2,13 +2,14 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "1.0.3",
+    version = "1.0.4",
     packages = find_packages(),
     install_requires = [
-        'requests', 'configparser', 'future', 'EZID'
+        'requests', 'configparser', 'future', 'EZID==0.4.2'
     ],
+    dependency_links=['https://github.com/ucldc/ezid/archive/v0.4.2.tar.gz#egg=EZID-0.4.2'],
     test_suite = 'pynux.tests.test_utils',
-    tests_require = ['httpretty==0.8.14'],
+    tests_require = ['httpretty'],
     entry_points={
         'console_scripts': [
             'nxql = pynux.nxql:main',
@@ -21,7 +22,7 @@ setup(
 )
 
 """
-Copyright © 2017, Regents of the University of California
+Copyright © 2019, Regents of the University of California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 
