@@ -2,10 +2,10 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "1.0.4",
+    version = "2.0.0-alpha",
     packages = find_packages(),
     install_requires = [
-        'requests', 'configparser', 'future', 'EZID==0.4.2'
+        'requests', 'configparser', 'future', 'EZID==0.4.2', 'nuxeo',
     ],
     dependency_links=['https://github.com/ucldc/ezid/archive/v0.4.2.tar.gz#egg=EZID-0.4.2'],
     test_suite = 'pynux.tests.test_utils',
