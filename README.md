@@ -5,10 +5,18 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
-## Install
+## Install / Upgrade
+
+latest release
 
 ```
-pip install https://github.com/ucldc/pynux/tarball/master
+pip install https://github.com/ucldc/pynux/tarball/master --upgrade
+```
+
+its possible you might need a latter day `pip`
+
+```
+pip install --upgrade pip
 ```
 
 ```
