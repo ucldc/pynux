@@ -12,9 +12,7 @@ master branch can be installed with
 ```
 pip install https://github.com/ucldc/pynux/tarball/master --upgrade
 ```
-We'll try to keep `master` stable, but for the latest release.
-
-See https://github.com/ucldc/pynux/releases/latest , or this might work
+We'll try to keep `master` stable, but for the latest release see https://github.com/ucldc/pynux/releases/latest , or this might work
 
 ```
 pip install $(curl -sL https://api.github.com/repos/ucldc/pynux/releases/latest | jq -r '.tarball_url')
