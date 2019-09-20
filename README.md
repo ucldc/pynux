@@ -5,12 +5,19 @@ pynux
 
 python function library for working with nuxeo "REST" APIs.
 
-## Install / Upgrade
+## Install / Upgrade with `pip`
 
-latest release
+master branch can be installed with
 
 ```
 pip install https://github.com/ucldc/pynux/tarball/master --upgrade
+```
+We'll try to keep `master` stable, but for the latest release.
+
+See https://github.com/ucldc/pynux/releases/latest , or this might work
+
+```
+pip install $(curl -sL https://api.github.com/repos/ucldc/pynux/releases/latest | jq -r '.tarball_url')
 ```
 
 its possible you might need a latter day `pip`
@@ -19,10 +26,10 @@ its possible you might need a latter day `pip`
 pip install --upgrade pip
 ```
 
-```
-pip install git+git://github.com/ucldc/pynux.git
-```
-or
+## install code
+
+checkout code and install 
+
 ```
 git clone https://github.com/ucldc/pynux.git
 cd pynux
@@ -33,20 +40,6 @@ python setup.py install
 ```
 python setup.py test
 ```
-
-## [Command and API Documentation](http://ucldc.github.io/pynux/)
-
-## Requirements
-
-### [Nuxeo](http://www.nuxeo.com/)
-
-### REST API
-
- * [docs.nuxeo.com](http://doc.nuxeo.com/display/public/NXDOC/REST+API) 
- * [marketplace](https://connect.nuxeo.com/nuxeo/site/marketplace/package/nuxeo-rest-api)
- * `nuxeoctl mp-install nuxeo-rest-api`
- * [api viewer](http://doc.nuxeo.com/display/public/NXDOC/Resources+Endpoints)
-
 
 ## Configuration
 
@@ -97,7 +90,7 @@ nxls.py / --show-custom-function foo
 
 ## License 
 
-Copyright © 2017, Regents of the University of California
+Copyright © 2019, Regents of the University of California
 
 All rights reserved.
 
