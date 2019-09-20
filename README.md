@@ -8,6 +8,10 @@ python function library for working with nuxeo "REST" APIs.
 ## Install
 
 ```
+pip install https://github.com/ucldc/pynux/tarball/master
+```
+
+```
 pip install git+git://github.com/ucldc/pynux.git
 ```
 or
