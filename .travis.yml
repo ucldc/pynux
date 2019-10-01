@@ -6,8 +6,9 @@ python:
   - "2.7"
 install: 
   - python setup.py install
+  - pip install httpretty
 script:
-  - python setup.py test 
+  - python pynux/tests/test_utils.py
 
 #before_script:
 #  - git config --global user.name "Teracy" # Configure your git user.name here

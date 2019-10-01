@@ -12,7 +12,6 @@ from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
 from builtins import object
-import requests
 import json
 import sys
 import os
@@ -23,6 +22,7 @@ import configparser
 from os.path import expanduser
 import codecs
 import urllib.parse
+import nuxeo.client
 
 # set the output to utf8 in py2 or py3
 UTF8Writer = codecs.getwriter('utf8')
@@ -157,6 +157,8 @@ X-NXDocumentProperties = dublincore
         redacted = self.conf
         redacted.update({'password': '...redacted...'})
         self.logger.debug(redacted)
+        self.nuxeo_client = nuxeo.client.Nuxeo(auth=self.auth)
+        self.request = self.nuxeo_client.client.request
 
     ## Python generator for paged API resource
     #    based on http://stackoverflow.com/questions/17702785/
@@ -173,12 +175,8 @@ X-NXDocumentProperties = dublincore
         :returns: json from nuxeo
         """
         params.update({'currentPageIndex': current_page_index})
-        res = requests.get(
-            url,
-            headers=self.document_property_headers,
-            params=params,
-            auth=self.auth)
-        res.raise_for_status()
+        path = url.split(self.nuxeo_client.client.host,1)[1]
+        res = self.request('GET', path, params=params)
         self.logger.debug(res.content)
         return json.loads(res.content.decode('utf-8'))
 
@@ -249,9 +247,8 @@ X-NXDocumentProperties = dublincore
         :rtype: string
         """
         url = u'/'.join([self.conf['api'], "path", escape_path(path).strip('/')])
-        res = requests.get(
-            url, headers=self.document_property_headers, auth=self.auth)
-        res.raise_for_status()
+        path = url.split(self.nuxeo_client.client.host,1)[1]
+        res = self.request('GET', path)
         return json.loads(res.content.decode('utf-8'))['uid']
 
     def get_metadata(self, **documentid):
@@ -268,9 +265,8 @@ X-NXDocumentProperties = dublincore
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
-        res = requests.get(
-            url, headers=self.document_property_headers, auth=self.auth)
-        res.raise_for_status()
+        path = url.split(self.nuxeo_client.client.host,1)[1]
+        res = self.request('GET', path)
         return json.loads(res.content.decode('utf-8'))
 
     def update_nuxeo_properties(self, data, **documentid):
@@ -297,9 +293,8 @@ X-NXDocumentProperties = dublincore
         payload['uid'] = uid
         payload['entity-type'] = data.get('entity-type', 'document')
         payload['properties'] = data['properties']
-        res = requests.put(
-            url, data=json.dumps(payload), auth=self.auth, headers=headers)
-        res.raise_for_status()
+        path = url.split(self.nuxeo_client.client.host,1)[1]
+        res = self.request('PUT', path, data=json.dumps(payload))
         return json.loads(res.content)
 
     def print_document_summary(self, documents):
