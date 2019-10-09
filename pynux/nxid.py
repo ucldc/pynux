@@ -16,6 +16,10 @@ try:
 except ImportError:
     # Fall back to Python 2's urllib2
     from urllib2 import urlopen
+try:
+    unicode = unicode ## for python 2
+except NameError:
+    unicode = str  ## for python 3
 import EZID
 from pynux import utils
 from pynux.utils import utf8_arg

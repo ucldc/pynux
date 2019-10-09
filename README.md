@@ -31,7 +31,7 @@ checkout code and install
 ```
 git clone https://github.com/ucldc/pynux.git
 cd pynux
-python setup.py install
+pip install .
 ```
 
 ### test
