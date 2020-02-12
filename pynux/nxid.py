@@ -167,12 +167,9 @@ def get_owner(erc):
 def check_ezid(ark, ezid):
     ''' check to see if the ARK is listed in EZID, returns raw ERC or `None`'''
     try:
-        sys.stdout = open(os.devnull, 'w')
         return ezid.view(ark)
     except HTTPError:
         return None
-    finally:
-        sys.stdout = sys.__stdout__
 
 
 def find_ark(s):
