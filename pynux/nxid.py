@@ -90,17 +90,17 @@ def main(argv=None):
 
     # query to select all parent level objects
     documents = nx.nxql(u'''
-SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio
+SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD
 WHERE ecm:path STARTSWITH "{}"
-AND ecm:currentLifeCycleState != "deleted"
+AND ecm:isTrashed = 0
 AND ecm:pos is NULL'''.format(argv.path[0]))
 
     # if the user gives the full path to a document
     if not any(True for _ in documents):  # https://stackoverflow.com/a/3114640/1763984
         documents = nx.nxql(u'''
-SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio
+SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD
 WHERE ecm:path = "{}"
-AND ecm:currentLifeCycleState != "deleted"
+AND ecm:isTrashed = 0
 AND ecm:pos is NULL'''.format(argv.path[0]))
 
     report = not(argv.no_noop_report)
