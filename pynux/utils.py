@@ -279,7 +279,7 @@ X-NXDocumentProperties = dublincore
         :param data: document properties for nuxeo update
         :type data: dict
         :param documentid: either uid= or path=
-        :returns: updated json from nuxeo
+        :returns: True (was: updated json from nuxeo)
         """
         uid = ''
         if len(documentid) != 1:
@@ -300,7 +300,10 @@ X-NXDocumentProperties = dublincore
         res = requests.put(
             url, data=json.dumps(payload), auth=self.auth, headers=headers)
         res.raise_for_status()
-        return json.loads(res.content)
+        #return json.loads(res.content)
+        # after Nuxeo 10.10, this redirect to the JSON -- the redirect does not
+        # play well with the way we are hacking around using the API and shibboleth at the same time
+        return True
 
     def print_document_summary(self, documents):
         for document in documents:
