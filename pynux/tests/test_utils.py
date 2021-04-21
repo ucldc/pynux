@@ -12,7 +12,7 @@ import unittest
 class TestNuxeoREST(unittest.TestCase):
     def setUp(self):
         self.nx = utils.Nuxeo({
-            'api': 'http://mockme/r',
+            'api': 'http://localhost:8080/nuxeo/',
         }, rcfile=io.BytesIO(bytes()))
 
     @httpretty.activate

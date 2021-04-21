@@ -2,13 +2,13 @@
 from setuptools import setup, find_packages
 setup(
     name='pynux',
-    version = "1.0.9",
+    version = "1.1.0-beta",
     packages = find_packages(),
     install_requires = [
-        'requests',
         'configparser',
         'future',
         'EZID @ https://github.com/ucldc/ezid/archive/v0.4.2.tar.gz',
+        'nuxeo',
     ],
     test_suite = 'pynux.tests.test_utils',
     tests_require = ['httpretty'],
