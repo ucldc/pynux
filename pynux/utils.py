@@ -290,7 +290,7 @@ X-NXDocumentProperties = dublincore
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
         headers = self.document_property_headers
-        headers.update({'Content-Type': 'application/json+nxentity'})
+        headers.update({'Content-Type': 'application/json'})
 
         # copy what we want from the input json into the payload
         payload = {}
