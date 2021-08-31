@@ -171,14 +171,6 @@ X-NXDocumentProperties = dublincore
         self.http.mount("https://", adapter)
         self.http.mount("http://", adapter)
 
-        '''
-        # https://stackoverflow.com/questions/16694907/how-to-download-large-file-in-python-with-requests-py
-        res = http.get(url,
-                headers=self.document_property_headers,
-                params=params,
-                auth=self.auth)
-        '''
-
     ## Python generator for paged API resource
     #    based on http://stackoverflow.com/questions/17702785/
     #    see also [Loop like a native](http://www.youtube.com/watch?v=EnSu9hHGq5o)
