@@ -13,6 +13,8 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import object
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import json
 import sys
 import os
@@ -158,6 +160,17 @@ X-NXDocumentProperties = dublincore
         redacted.update({'password': '...redacted...'})
         self.logger.debug(redacted)
 
+        # implement retry strategy
+        # https://findwork.dev/blog/advanced-usage-python-requests-timeouts-retries-hooks/#retry-on-failure
+        retry_strategy = Retry(
+            total=3,
+            status_forcelist=[413, 429, 500, 502, 503, 504],
+)
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.http = requests.Session()
+        self.http.mount("https://", adapter)
+        self.http.mount("http://", adapter)
+
     ## Python generator for paged API resource
     #    based on http://stackoverflow.com/questions/17702785/
     #    see also [Loop like a native](http://www.youtube.com/watch?v=EnSu9hHGq5o)
@@ -173,11 +186,13 @@ X-NXDocumentProperties = dublincore
         :returns: json from nuxeo
         """
         params.update({'currentPageIndex': current_page_index})
-        res = requests.get(
+
+        res = self.http.get(
             url,
             headers=self.document_property_headers,
             params=params,
             auth=self.auth)
+
         res.raise_for_status()
         self.logger.debug(res.content)
         return json.loads(res.content.decode('utf-8'))
@@ -249,7 +264,7 @@ X-NXDocumentProperties = dublincore
         :rtype: string
         """
         url = u'/'.join([self.conf['api'], "path", escape_path(path).strip('/')])
-        res = requests.get(
+        res = self.http.get(
             url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.content.decode('utf-8'))['uid']
@@ -268,7 +283,7 @@ X-NXDocumentProperties = dublincore
         elif 'uid' in documentid:
             uid = documentid['uid']
         url = u'/'.join([self.conf['api'], "id", uid])
-        res = requests.get(
+        res = self.http.get(
             url, headers=self.document_property_headers, auth=self.auth)
         res.raise_for_status()
         return json.loads(res.content.decode('utf-8'))
@@ -297,10 +312,10 @@ X-NXDocumentProperties = dublincore
         payload['uid'] = uid
         payload['entity-type'] = data.get('entity-type', 'document')
         payload['properties'] = data['properties']
-        res = requests.put(
+        res = self.http.put(
             url, data=json.dumps(payload), auth=self.auth, headers=headers)
         res.raise_for_status()
-        r2 = requests.get(url, auth=self.auth, headers=headers)
+        r2 = self.http.get(url, auth=self.auth, headers=headers)
         r2.raise_for_status()
         return json.loads(r2.content)
 
