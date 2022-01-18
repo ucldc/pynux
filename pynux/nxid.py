@@ -6,6 +6,7 @@ import sys
 import argparse
 import os
 import re
+import itertools
 try:
     from StringIO import StringIO ## for Python 2
 except ImportError:
@@ -95,13 +96,19 @@ WHERE ecm:path STARTSWITH "{}"
 AND ecm:isTrashed = 0
 AND ecm:pos is NULL'''.format(argv.path[0]))
 
-    # if the user gives the full path to a document
-    if not any(True for _ in documents):  # https://stackoverflow.com/a/3114640/1763984
+    # if the user gives the full path to a document rather than a folder,
+    # `documents` will be an empty generator
+    # https://stackoverflow.com/questions/661603/how-do-i-know-if-a-generator-is-empty-from-the-start
+    try:
+        first = next(documents)
+    except StopIteration:
         documents = nx.nxql(u'''
 SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD
 WHERE ecm:path = "{}"
 AND ecm:isTrashed = 0
 AND ecm:pos is NULL'''.format(argv.path[0]))
+    else:
+        documents = itertools.chain([first], documents)
 
     report = not(argv.no_noop_report)
 
