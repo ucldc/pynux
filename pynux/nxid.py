@@ -6,6 +6,7 @@ import sys
 import argparse
 import os
 import re
+import itertools
 try:
     from StringIO import StringIO ## for Python 2
 except ImportError:
@@ -29,6 +30,13 @@ from pprint import pprint as pp
 # regular expression to match an ARK
 ARK_RE = re.compile('(ark:/\d{5}\/[^/|\s]*)')
 
+FOLDER_NXQL = u"SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD " \
+              u"WHERE ecm:path STARTSWITH '{}' " \
+              u"AND ecm:pos is NULL"
+
+DOCUMENT_NXQL = u"SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD " \
+                u"WHERE ecm:path = '{}' " \
+                u"AND ecm:pos is NULL"
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
@@ -79,7 +87,6 @@ def main(argv=None):
     if argv is None:
         argv = parser.parse_args()
 
-
     nx = utils.Nuxeo(rcfile=argv.rcfile, loglevel=argv.loglevel.upper())
 
     # read config out of .pynuxrc file
@@ -88,20 +95,19 @@ def main(argv=None):
     shoulder = argv.shoulder or nx.ezid_conf['shoulder']
     ezid = EZID.EZIDClient(credentials=dict(username=username, password=password))
 
-    # query to select all parent level objects
-    documents = nx.nxql(u'''
-SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD
-WHERE ecm:path STARTSWITH "{}"
-AND ecm:isTrashed = 0
-AND ecm:pos is NULL'''.format(argv.path[0]))
+    # select all parent level objects
+    query = FOLDER_NXQL.format(argv.path[0])
+    documents = nx.nxql(query)
 
-    # if the user gives the full path to a document
-    if not any(True for _ in documents):  # https://stackoverflow.com/a/3114640/1763984
-        documents = nx.nxql(u'''
-SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD
-WHERE ecm:path = "{}"
-AND ecm:isTrashed = 0
-AND ecm:pos is NULL'''.format(argv.path[0]))
+    # if results from folder_nxql are empty, retry using document_nxql
+    # https://stackoverflow.com/questions/661603/how-do-i-know-if-a-generator-is-empty-from-the-start
+    try:
+        first = next(documents)
+    except StopIteration:
+        query = DOCUMENT_NXQL.format(argv.path[0])
+        documents = nx.nxql(query)
+    else:
+        documents = itertools.chain([first], documents)
 
     report = not(argv.no_noop_report)
 
