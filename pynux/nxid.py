@@ -32,10 +32,12 @@ ARK_RE = re.compile('(ark:/\d{5}\/[^/|\s]*)')
 
 FOLDER_NXQL = u"SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD " \
               u"WHERE ecm:path STARTSWITH '{}' " \
+              u"AND ecm:isTrashed = 0 " \
               u"AND ecm:pos is NULL"
 
 DOCUMENT_NXQL = u"SELECT * FROM SampleCustomPicture, CustomFile, CustomVideo, CustomAudio, CustomThreeD " \
                 u"WHERE ecm:path = '{}' " \
+                u"AND ecm:isTrashed = 0 " \
                 u"AND ecm:pos is NULL"
 
 def main(argv=None):
